@@ -31,7 +31,7 @@ public class PolygonMaker : MonoBehaviour {
 		for (int i = 0; i < numsides; i++) {
 			verts[i] = Quaternion.AngleAxis(360f / numsides * -i, Vector3.forward) * Vector3.up;
 
-			uv[i] = new Vector2(0, 0); //TODO are we even going to be texturing
+			uv[i] = new Vector2(0.5f+verts[i].x/2, 0.5f+verts[i].y/2);
 
 			tris[3 * i] = 0;
 			tris[3 * i + 1] = i;
@@ -82,11 +82,14 @@ public class PolygonMaker : MonoBehaviour {
 	void updateTransitionalMesh(float firstangle, Mesh m) {
 		int ns = m.vertices.Length;
 		Vector3[] verts = new Vector3[ns];
+		Vector2[] uv = new Vector2[ns];
 		verts[0] = Quaternion.AngleAxis(0, Vector3.forward) * Vector3.up;
 		for (int i = 1; i < ns; i++) {
-			verts[i] = Quaternion.AngleAxis(-firstangle - ((360f - firstangle) / (ns-1)) * (i-1), Vector3.forward) * Vector3.up;
+			verts[i] = Quaternion.AngleAxis(-firstangle - ((360f - firstangle) / (ns - 1)) * (i - 1), Vector3.forward) * Vector3.up;
+			uv[i] = new Vector2(0.5f + verts[i].x / 2, 0.5f + verts[i].y / 2);
 		}
 		m.vertices = verts;
+		m.uv = uv;
 	}
 
 	// Update is called once per frame
