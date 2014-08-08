@@ -63,7 +63,7 @@ public class PolygonMaker : MonoBehaviour {
 			transElapsed = 0f;
 
 			Mesh m = makeMesh(numsides + 1);
-			updateTransitionalMesh(0f, m);
+			updateTransitionalMesh(0f, 0f, m);
 			filter.mesh = m;
 		}
 	}
@@ -79,15 +79,19 @@ public class PolygonMaker : MonoBehaviour {
 		this.filter.mesh = makeMesh(this._numsides);
 	}
 
-	void updateTransitionalMesh(float firstangle, Mesh m) {
+	void updateTransitionalMesh(float firstAngle, float offsetAngle, Mesh m) {
 		int ns = m.vertices.Length;
 		Vector3[] verts = new Vector3[ns];
 		Vector2[] uv = new Vector2[ns];
-		verts[0] = Quaternion.AngleAxis(0, Vector3.forward) * Vector3.up;
+		verts[0] = Quaternion.AngleAxis(offsetAngle, Vector3.forward) * Vector3.up;
+		float angstep = ((360f - firstAngle) / (ns - 1));
 		for (int i = 1; i < ns; i++) {
-			verts[i] = Quaternion.AngleAxis(-firstangle - ((360f - firstangle) / (ns - 1)) * (i - 1), Vector3.forward) * Vector3.up;
+			verts[i] = Quaternion.AngleAxis(-firstAngle + offsetAngle - angstep * (i - 1), Vector3.forward) * Vector3.up;
+		}
+		for (int i = 0; i < ns; i++) {
 			uv[i] = new Vector2(0.5f + verts[i].x / 2, 0.5f + verts[i].y / 2);
 		}
+		
 		m.vertices = verts;
 		m.uv = uv;
 	}
@@ -105,17 +109,19 @@ public class PolygonMaker : MonoBehaviour {
 			}
 		}
 		else if (transElapsed < transtime){
-			float angsrc, angdest;
+			float angsrc, angdest, ofsdest;
 			if (growing) {
 				angsrc = 0;
 				angdest = 360 / (this._numsides + 1);
+				ofsdest = -2 * 360 / (this._numsides + 1);
 			}else {
 				angsrc = 360 / this._numsides;
 				angdest = 0;
+				ofsdest = 360 / (this._numsides-1);
 			}
-			
-			float firstangle = angsrc + (angdest - angsrc) * easing(transElapsed / transtime);
-			updateTransitionalMesh(firstangle, filter.mesh);
+			float ease = easing(transElapsed / transtime);
+			float firstangle = angsrc + (angdest - angsrc) * ease;
+			updateTransitionalMesh(firstangle, ofsdest * ease, filter.mesh);
 		}
 		else {
 			transitioning = false;
