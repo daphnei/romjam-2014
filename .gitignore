@@ -11,3 +11,17 @@
 /*.userprefs
 /*.pidb
 /*.booproj
+
+# Removing Project files for visual studio / Monodevelop, etc
+/*.csproj
+/*.unityproj
+/*.sln
+/*.suo
+/*.user
+/*.userprefs
+/*.pidb
+/*.booproj
+/*.DotSettings
+
+#Unity3D Generated File On Crash Reports
+sysinfo.txt
