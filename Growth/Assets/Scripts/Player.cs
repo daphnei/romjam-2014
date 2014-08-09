@@ -7,7 +7,7 @@ public class Player : MonoBehaviour {
 	const float TAP_TIME = 0.2f;
 	const float TAP_RADIUS = 20f;
 	const float LINE_WIDTH = 0.2f;
-	
+
 	public float rotationFriction = 600;
 	public float maxRotationSpeed = 1500;
 	public float angleExaggerateDistance = 1.75f;
@@ -29,16 +29,16 @@ public class Player : MonoBehaviour {
 	private List<CapturedNutrient> nutrientList;
 
 	// Use this for initialization
-	void Awake () {
+	void Awake() {
 		World.Instance.Register(this);
 
 		this.nutrientParent = new GameObject();
 		this.nutrientParent.transform.position = this.transform.position;
 		this.nutrientList = new List<CapturedNutrient>();
 	}
-	
+
 	// Update is called once per frame
-	void Update () {
+	void Update() {
 		float realDeltaTime = Time.realtimeSinceStartup - this.prevRealTime;
 
 		if (Input.GetMouseButton(0)) {
@@ -111,16 +111,14 @@ public class Player : MonoBehaviour {
 		}
 	}
 
-	public void AddNutrient()
-	{
+	public void AddNutrient() {
 		int curNumVertices = this.polygon.vertices.Length;
 
 		//Add a nutrient if we're not at the max.
-		if (this.nutrientList.Count < curNumVertices)
-		{
+		if (this.nutrientList.Count < curNumVertices) {
 			float angleOfNewNut = (360 / curNumVertices) * this.nutrientList.Count;
 			float angleOfNewNutInRadians = Mathf.Deg2Rad * angleOfNewNut;
-			
+
 			float radius = 0.5f;
 			Vector2 targetPosition = new Vector2(
 				radius * Mathf.Cos(angleOfNewNutInRadians),
@@ -128,28 +126,23 @@ public class Player : MonoBehaviour {
 
 			CapturedNutrient nut = Object.Instantiate(this.nutrientPrefab) as CapturedNutrient;
 			nut.transform.parent = nutrientParent.transform;
-
 			nut.transform.localPosition = targetPosition;
 
 			this.nutrientList.Add(nut);
 		}
-		//Reached the max number of nutrients for this polygom. Time to grow an extra side!
-		else
-		{
+			//Reached the max number of nutrients for this polygom. Time to grow an extra side!
+		else {
 			//First delete all the nutrients.
-			foreach (CapturedNutrient nut in this.nutrientList)
-			{
+			foreach (CapturedNutrient nut in this.nutrientList) {
 				Object.Destroy(nut.gameObject);
 			}
 
 			this.nutrientList.Clear();
-
 			this.polygon.addNode();
 		}
 	}
 
-	public void RemoveNutrient()
-	{
+	public void RemoveNutrient() {
 	}
 
 	void OnGUI() {
