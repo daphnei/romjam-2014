@@ -26,6 +26,15 @@ public class PolygonMaker : MonoBehaviour {
 	private float transElapsed = 0f;
 	static float transtime = 0.5f;
 
+	// Use this for initialization
+	void Start() {
+		filter = this.gameObject.GetComponent<MeshFilter>();
+		pcollider = this.gameObject.GetComponent<PolygonCollider2D>();
+		this.filter.mesh = makeMesh(3);
+		this.pcollider.CreatePrimitive(this._numsides, new Vector2(1, 1), new Vector2(0, 0));
+	}
+
+
 	public static Mesh makeMesh(int numsides) {
 		Mesh m = new Mesh ();
 		Vector3[] verts = new Vector3[numsides];
@@ -70,13 +79,6 @@ public class PolygonMaker : MonoBehaviour {
 			updateTransitionalMesh(0f, 0f, m);
 			filter.mesh = m;
 		}
-	}
-
-	// Use this for initialization
-	void Start() {
-		filter = this.gameObject.GetComponent<MeshFilter>();
-		pcollider = this.gameObject.GetComponent<PolygonCollider2D>();
-		this.filter.mesh = makeMesh(this._numsides);
 	}
 
 	void updateTransitionalMesh(float firstAngle, float offsetAngle, Mesh m) {
