@@ -22,7 +22,7 @@ public static class Helpers {
 	}
 
 	public static float AngleFromUnitX(this Vector2 vector) {
-		return Vector3.Angle(new Vector3(1, 0), vector) * Mathf.Sign(Vector3.Dot(new Vector3(1, 0), vector.Rotate90DegreesCounterClockwise()));
+		return Vector3.Angle(new Vector3(-1, 0), vector) * Mathf.Sign(Vector3.Dot(new Vector3(1, 0), vector.Rotate90DegreesCounterClockwise()));
 	}
 
 	public static float AbsSubtract(this float value, float subtract) {
