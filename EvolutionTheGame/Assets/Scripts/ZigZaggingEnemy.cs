@@ -31,7 +31,7 @@ public class ZigZaggingEnemy : Enemy {
 	{
 		base.DoUpdate();
 
-		Vector3 positionOfPlayer = World.GetInstance().player.transform.position;
+		Vector3 positionOfPlayer = World.Instance.player.transform.position;
 
 		//Need to move toward the player.
 		Vector3 directionToPlayer = -(this.transform.position - positionOfPlayer);
