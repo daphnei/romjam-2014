@@ -14,8 +14,8 @@ public class Player : MonoBehaviour {
 	float averageRotateSpeed;
 
 	// Use this for initialization
-	void Start () {
-		World.Instance.player = this;
+	void Awake () {
+		World.Instance.Register(this);
 	}
 	
 	// Update is called once per frame
