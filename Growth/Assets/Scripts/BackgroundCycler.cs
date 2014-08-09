@@ -13,8 +13,7 @@ public class BackgroundCycler : Pulser {
 	private float time;
 	private float nextTime;
 
-	// Use this for initialization
-	void Start () {
+	protected override void Start() {
 		PulseController.Instance.AddPulser(this);
 		time = Time.timeSinceLevelLoad;
 		nextTime = Time.timeSinceLevelLoad;

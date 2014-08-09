@@ -14,14 +14,15 @@ public class NutrientAnimator : Pulser {
 	private float pulseCount;
 
 	private Transform ring, core;
-	private Light light;
+	private Light myLight;
 	private ParticleSystem parts;
 
 	// Use this for initialization
-	void Start () {
+	protected override void  Start() {
+		base.Start();
 		core = this.transform.FindChild("core");
 		ring = this.transform.FindChild("ring");
-		light = this.GetComponent<Light>();
+		myLight = this.GetComponent<Light>();
 		ringScaleInitial = ring.transform.localScale.x;
 		coreScaleIntitial = core.transform.localScale.x;
 
@@ -55,7 +56,7 @@ public class NutrientAnimator : Pulser {
 											pulse * coreScaleIntitial * d,
 											0) * jitterweight;
 
-		light.intensity = this.core.localScale.x;
-		light.range = this.ring.localScale.x;
+		myLight.intensity = this.core.localScale.x;
+		myLight.range = this.ring.localScale.x;
 	}
 }
