@@ -3,17 +3,15 @@ using System.Collections;
 
 public class Pulser : MonoBehaviour  {
 
-	// Use this for initialization
-	void Start () {
-			
+	protected virtual void Start() {
+		PulseController.Instance.AddPulser(this);
 	}
-	
-	// Update is called once per frame
-	void Update () {
-	
+
+	protected virtual void OnDestroy() {
+		if (PulseController.Instance != null)
+			PulseController.Instance.RemovePulser(this);
 	}
 
 	public virtual void Pulse() {
-		Debug.Log ("I'm pulsing!");
 	}
 }
