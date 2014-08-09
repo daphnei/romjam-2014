@@ -3,9 +3,10 @@ using System.Collections;
 
 public class PolygonMaker : MonoBehaviour {
 
-	private MeshFilter filter;
 	private PolygonCollider2D pcollider;
 
+	//I know this hsouldn't be public with a getter setter, but I cannot too lazy to figure out the syntax.
+	public MeshFilter filter;
 	public Vector3[] vertices { get { return this.filter.mesh.vertices; } }
 
 	public int _numsides = 3; //public to set in editor. pls no abus.
