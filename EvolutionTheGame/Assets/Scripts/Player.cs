@@ -8,6 +8,8 @@ public class Player : MonoBehaviour {
 	public float AngleExaggerateDistance = 1.75f;
 	public float AngleExaggerateIncrease = 0.5f;
 
+	public PolygonMaker myPolygonMaker;
+
 	float rotationSpeed;
 
 	Vector3? prevMousePosition;
