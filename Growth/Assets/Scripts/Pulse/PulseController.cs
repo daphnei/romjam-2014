@@ -17,7 +17,9 @@ public class PulseController : SceneSingleton<PulseController> {
 	public float songLerpSpeed = 0.012f;
 
 	// Use this for initialization
-	void Start () {
+	void Awake () {
+		pulsers = this.GetComponentsInChildren<Pulser>().ToList();
+
 		// nobody likes Newgrounds music
 //		song.volume = 0;
 		song.Play();
