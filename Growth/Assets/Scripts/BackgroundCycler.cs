@@ -25,14 +25,14 @@ public class BackgroundCycler : Pulser {
 
 		//Create a bunch of random vertical-ish lines.
 		float approxDistBetweenLines = Camera.main.pixelWidth / NUM_LINES;
-		for (int i = 0; i < NUM_LINES; i++)
-		{
-//			GameObject g = Instantiate(bgPolygon) as GameObject;
-//			g.transform.position = new Vector2(0, 0);
-//			MeshRenderer mr = g.GetComponent<MeshRenderer>() as MeshRenderer;
-//
-//			mr.material.color = Color.red;
-		}
+//		for (int i = 0; i < NUM_LINES; i++)
+//		{
+			GameObject g = Instantiate(bgPolygon) as GameObject;
+			g.transform.position = new Vector2(0, 0);
+			MeshRenderer mr = g.GetComponent<MeshRenderer>() as MeshRenderer;
+
+			mr.material.color = Color.red;
+//		}
 	}
 
 	static Mesh clone(Mesh mesh)
