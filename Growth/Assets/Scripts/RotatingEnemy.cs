@@ -45,7 +45,7 @@ public class RotatingEnemy : Enemy {
 	override protected void ChooseSpawnPoint()
 	{
 		//How far off screen to do initial position;
-		int d = 2;
+		int d = 3;
 		
 		//Choose a spawn point on one of the edges of the viewport.
 		Vector2 spawnPoint = new Vector2(
