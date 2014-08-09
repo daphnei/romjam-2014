@@ -8,7 +8,8 @@ public class Pulser : MonoBehaviour  {
 	}
 
 	protected virtual void OnDestroy() {
-		PulseController.Instance.RemovePulser(this);
+		if (PulseController.Instance != null)
+			PulseController.Instance.RemovePulser(this);
 	}
 
 	public virtual void Pulse() {
