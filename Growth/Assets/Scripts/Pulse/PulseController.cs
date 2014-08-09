@@ -13,7 +13,7 @@ public class PulseController : SceneSingleton<PulseController> {
 	private int lastSamples = 0;
 
 	// Use this for initialization
-	void Start () {
+	void Awake () {
 		pulsers = this.GetComponentsInChildren<Pulser>().ToList();
 
 		// nobody likes Newgrounds music
