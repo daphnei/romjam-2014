@@ -1,7 +1,7 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 
-public class ZigZaggingEnemy : Enemy {
+public class ZigZaggingEnemy : Critter {
 	public float minSineMagnitude = 1;
 	public float maxSineMagnitude = 1.5f;
 
@@ -14,7 +14,7 @@ public class ZigZaggingEnemy : Enemy {
 	/**
 	 * A bigger value means it will take longer to get to the player.
 	 */
-	private float timeToGetToPlayer = 1.3f;
+	private float timeToGetToPlayer = 0.77f;
 
 	private Vector3 startingPos;
 
@@ -45,7 +45,7 @@ public class ZigZaggingEnemy : Enemy {
 
 		//Also move toward the player.
 		directionToPlayer.Normalize();
-		var offset = Time.deltaTime * (directionToPlayer / timeToGetToPlayer);
+		var offset = Time.deltaTime * (directionToPlayer * timeToGetToPlayer);
 		this.transform.position += offset;
 		this.startingPos += offset;
 	}

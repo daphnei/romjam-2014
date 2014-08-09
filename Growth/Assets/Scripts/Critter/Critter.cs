@@ -1,7 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Enemy : MonoBehaviour {
+/**
+ * A critter is anything that spawns outside of the scene
+ * and will eventually come toward the player.
+ * 
+ * IE: Enemies, Nutrients
+ **/
+public class Critter : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		DoStart();
@@ -23,9 +29,14 @@ public class Enemy : MonoBehaviour {
 		//At some point this can be replaced with a check for collision?
 		if (Mathf.Abs((this.transform.position - positionOfPlayer).magnitude) < 1.5)
 		{
-			Destroy(this.gameObject);
+			HitThePlayer();
 		}
 	}
+
+	virtual protected void HitThePlayer()
+	{
+		Destroy(this.gameObject);
+	}                            
 
 	//Spawn on any of the edges of the screen.
 	virtual protected void ChooseSpawnPoint()

@@ -26,4 +26,9 @@
 #Unity3D Generated File On Crash Reports
 sysinfo.txt
 
+#etc
 */Thumbs.db
+/Growth/Assets/UnityVS/*
+/UnityGam/Assets/UnityVS/*
+/Growth/Assets/*
+/UnityGam/Assets/*
