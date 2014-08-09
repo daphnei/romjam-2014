@@ -2,7 +2,14 @@
 using System.Collections;
 
 public class FreeNutrient : Critter {
-	
+
+	NutrientAnimator animatorObj;
+
+	override protected void Start() {;
+		this.animatorObj = this.GetComponent<NutrientAnimator>();
+		base.Start();
+	}
+
 	// Update is called once per frame
 	override public void DoUpdate () {
 		base.DoUpdate();
@@ -20,5 +27,10 @@ public class FreeNutrient : Critter {
 		base.HitThePlayer();
 
 		World.Instance.player.AddNutrient();
+	}
+
+	override public void Pulse() {
+		Debug.Log(this.animatorObj);
+		this.animatorObj.Pulse();
 	}
 }
