@@ -23,12 +23,20 @@ public class PulseController : MonoBehaviour {
 		samplesElapsed += song.timeSamples - lastSamples;
 		lastSamples = song.timeSamples;
 
+		if (Input.GetKeyDown(KeyCode.Space)) {
+			PulseAll();
+		}
+
+
 		if (samplesElapsed > (bpm / 60) * 41800) {
 			samplesElapsed = 0;
+			PulseAll();
+		}
+	}
 
-			foreach (Pulser pulser in this.pulsers) {
-				pulser.Pulse();
-			}
+	void PulseAll() {
+		foreach (Pulser pulser in this.pulsers) {
+			pulser.Pulse();
 		}
 	}
 
