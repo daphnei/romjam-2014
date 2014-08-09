@@ -5,6 +5,7 @@ using System.Collections.Generic;
 public class PulseController : MonoBehaviour {
 
 	public AudioSource song;
+	public int bpm;
 
 	private Pulser[] pulsers;
 	private int samplesElapsed = 0;
