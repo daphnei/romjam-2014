@@ -12,7 +12,7 @@ public class BackgroundCycler : Pulser {
 	public float minLineColorFraction = 0.6f;
 	public float maxLineColorFraction = 0.9f;
 
-	private MeshFilter filter;
+	public BackgroundPolygon bgPolygon;
 	
 	private List<GameObject> lines;
 	private float time = 0;
@@ -29,12 +29,27 @@ public class BackgroundCycler : Pulser {
 //		float approxDistBetweenLines = Camera.main.pixelWidth / NUM_LINES;
 //		for (int i = 0; i < NUM_LINES; i++)
 //		{
-//			float approxXPos = (approxDistBetweenLines * i) + (approxDistBetweenLines/2);
-//			createLine(approxXPos);
+			GameObject g = Instantiate(bgPolygon) as GameObject;
+			g.transform.position = new Vector2(0, 0);
+			MeshRenderer mr = g.GetComponent<MeshRenderer>() as MeshRenderer;
+
+			mr.material.color = Color.red;
 //		}
 	}
 
-	// Update is called once per frame
+	static Mesh clone(Mesh mesh)
+	{
+		Mesh newmesh = new Mesh();
+		newmesh.vertices = mesh.vertices;
+		newmesh.triangles = mesh.triangles;
+		newmesh.uv = mesh.uv;
+		newmesh.normals = mesh.normals;
+		newmesh.colors = mesh.colors;
+		newmesh.tangents = mesh.tangents;
+		return newmesh;
+	}
+
+		// Update is called once per frame
 	void Update () {
 		chooseBackgroundColor();
 
@@ -48,36 +63,6 @@ public class BackgroundCycler : Pulser {
 			Mathf.Sin(frequency*time + 2) * 0.5f + 0.5f,
 			Mathf.Sin(frequency*time + 4) * 0.5f + 0.5f
 			);
-	}
-
-	private void createLine(float approxXPos)
-	{
-		GameObject go = new GameObject();
-		this.lines.Add(go);
-		
-		LineRenderer lr = go.AddComponent<LineRenderer>();
-		lr.useWorldSpace = false;
-		lr.SetVertexCount(2);
-		lr.material.color = Color.red;
-
-		//Make sure they are the correct color.
-		float fract = Random.Range(minLineColorFraction, maxLineColorFraction);
-		lr.material.color = Camera.main.backgroundColor * fract;
-
-		this.updateLinePos(lr, approxXPos);
-	}
-	
-	private void updateLinePos(LineRenderer lr, float approxXPos)
-	{
-		float lineXPos1 = Random.Range(approxXPos - lineDeviance, approxXPos + lineDeviance);
-		float lineXPos2 = Random.Range(lineXPos1 - lineDeviance, lineXPos1 + lineDeviance);
-		
-		Vector2 startPos = Camera.main.ScreenToWorldPoint(new Vector2(lineXPos1, 0));
-		Vector2 endPos = Camera.main.ScreenToWorldPoint(new Vector2(lineXPos2, Camera.main.pixelHeight));
-		
-		lr.SetPosition(0, startPos);
-		lr.SetPosition(1, endPos);
-		lr.SetWidth(0.2f, 0.2f);
 	}
 	
 	public override void Pulse() {
