@@ -113,7 +113,7 @@ public class Player : MonoBehaviour {
 			//First delete all the nutrients.
 			foreach (CapturedNutrient nut in this.nutrientList)
 			{
-				Object.Destroy(nut);
+				Object.Destroy(nut.gameObject);
 			}
 
 			this.nutrientList.Clear();
