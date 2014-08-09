@@ -20,7 +20,7 @@ public class PolygonMaker : MonoBehaviour {
 	private bool transitioning = false;
 	private bool growing = true;
 	private float transElapsed = 0f;
-	static float transtime = 1f;
+	static float transtime = 0.5f;
 
 	public static Mesh makeMesh(int numsides) {
 		Mesh m = new Mesh ();
