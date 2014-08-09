@@ -68,11 +68,6 @@ public class PolygonMaker : MonoBehaviour {
 		}
 	}
 
-	// n in (0,1)
-	float easing(float n) {
-		return Mathf.Sin(n*(Mathf.PI/2)); //TODO this
-	}
-
 	// Use this for initialization
 	void Start() {
 		filter = this.gameObject.GetComponent<MeshFilter>();
@@ -101,10 +96,10 @@ public class PolygonMaker : MonoBehaviour {
 		transElapsed += Time.deltaTime;
 
 		if (!transitioning) {
-			if (Input.GetKey(KeyCode.A)) {
+			if (Input.GetKey(KeyCode.S)) {
 				addNode();
 			}
-			if (Input.GetKey(KeyCode.S)) {
+			if (Input.GetKey(KeyCode.A)) {
 				removeNode();
 			}
 		}
@@ -119,7 +114,7 @@ public class PolygonMaker : MonoBehaviour {
 				angdest = 0;
 				ofsdest = 360 / (this._numsides-1);
 			}
-			float ease = easing(transElapsed / transtime);
+			float ease = Easing.easeSin(transElapsed / transtime);
 			float firstangle = angsrc + (angdest - angsrc) * ease;
 			updateTransitionalMesh(firstangle, ofsdest * ease, filter.mesh);
 		}
