@@ -8,27 +8,29 @@ public class BackgroundCycler : Pulser {
 	public float frequency = 0.1f;
 	public float lineDeviance = 20;
 
+
 	public float minLineColorFraction = 0.6f;
 	public float maxLineColorFraction = 0.9f;
 
-	public BackgroundPolygon bgPolygon;
+	public GameObject bgPolygon;
 	
 	private List<GameObject> lines;
+	private float time = 0;
+	private float nextTime = 0;
 	
 	// Use this for initialization
-	void Start () {
+	protected override void Start () {
 		base.Start();
 		
 		this.lines = new List<GameObject>();
 
 		chooseBackgroundColor();
 
-		//Create a bunch of random vertical-ish lines.
-		float approxDistBetweenLines = Camera.main.pixelWidth / NUM_LINES;
+//		float approxDistBetweenLines = Camera.main.pixelWidth / NUM_LINES;
 //		for (int i = 0; i < NUM_LINES; i++)
 //		{
-			GameObject g = Instantiate(bgPolygon) as GameObject;
-			g.transform.position = new Vector2(0, 0);
+			GameObject g = GameObject.Instantiate(bgPolygon) as GameObject;
+			g.transform.position = new Vector3(0, 0);
 			MeshRenderer mr = g.GetComponent<MeshRenderer>() as MeshRenderer;
 
 			mr.material.color = Color.red;
@@ -49,15 +51,17 @@ public class BackgroundCycler : Pulser {
 
 		// Update is called once per frame
 	void Update () {
-			chooseBackgroundColor();
+		chooseBackgroundColor();
+
+		time = Mathf.MoveTowards(time, nextTime, 0.01f);
 	}
 
 	private void chooseBackgroundColor()
 	{
 		Camera.main.backgroundColor = Camera.main.backgroundColor = new Color(
-			Mathf.Sin(frequency*Time.timeSinceLevelLoad) * 0.5f + 0.5f,
-			Mathf.Sin(frequency*Time.timeSinceLevelLoad + 2) * 0.5f + 0.5f,
-			Mathf.Sin(frequency*Time.timeSinceLevelLoad + 4) * 0.5f + 0.5f
+			Mathf.Sin(frequency*time) * 0.5f + 0.5f,
+			Mathf.Sin(frequency*time + 2) * 0.5f + 0.5f,
+			Mathf.Sin(frequency*time + 4) * 0.5f + 0.5f
 			);
 	}
 	

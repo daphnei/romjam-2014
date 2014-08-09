@@ -29,6 +29,8 @@ public class Player : MonoBehaviour {
 	private List<CapturedNutrient> nutrientList;
 	private int lastPlayerRotationDir = 1; //either 1 or -1
 
+	private bool canFire;
+
 	// Use this for initialization
 	void Awake() {
 		World.Instance.Register(this);
@@ -38,10 +40,14 @@ public class Player : MonoBehaviour {
 		this.nutrientList = new List<CapturedNutrient>();
 	}
 
-
 	// Update is called once per frame
 	void Update() {
 		float realDeltaTime = Time.realtimeSinceStartup - this.prevRealTime;
+
+		if (this.bulletContainer.transform.childCount == 0) {
+			this.canFire = true;
+			this.bulletContainer.transform.localRotation = Quaternion.Euler(Vector3.zero);
+		}
 
 		if (Input.GetMouseButton(0)) {
 			if (!this.prevMousePosition.HasValue) {
@@ -75,7 +81,8 @@ public class Player : MonoBehaviour {
 			}
 		}
 
-		Time.timeScale = Mathf.Clamp(Mathf.Abs(this.rotationSpeed) / 80f, 0.2f, 3f);
+//		Time.timeScale = Mathf.Clamp(Mathf.Abs(this.rotationSpeed) / 80f, 0.2f, 3f);
+
 		this.rotationSpeed = Mathf.Clamp(this.rotationSpeed, -maxRotationSpeed, maxRotationSpeed);
 		this.transform.Rotate(new Vector3(0, 0, 1), this.rotationSpeed * realDeltaTime);
 		this.rotationSpeed = this.rotationSpeed.AbsSubtract(rotationFriction * realDeltaTime);
@@ -90,6 +97,10 @@ public class Player : MonoBehaviour {
 	}
 
 	private void OnPlayerTappedScreen() {
+		if (!this.canFire) {
+			return;
+		}
+
 		Vector3[] vertices = this.polygon.vertices;
 		for (int i = 0; i < vertices.Length; i++) {
 			int i1 = i == 0 ? vertices.Length - 1 : i - 1;
@@ -101,7 +112,7 @@ public class Player : MonoBehaviour {
 			GameObject g = new GameObject();
 			g.transform.position = vCenter;
 			g.name = "Bullet";
-			g.AddComponent<Bullet>().localVelocity = (vertices[i1] + vertices[i2]) / 2;
+			g.AddComponent<Bullet>().localVelocity = (vertices[i1] + vertices[i2]);
 
 			LineRenderer lr = g.AddComponent<LineRenderer>();
 			lr.transform.parent = this.bulletContainer.transform;
