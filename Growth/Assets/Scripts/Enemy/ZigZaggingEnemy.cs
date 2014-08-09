@@ -14,7 +14,7 @@ public class ZigZaggingEnemy : Enemy {
 	/**
 	 * A bigger value means it will take longer to get to the player.
 	 */
-	private float timeToGetToPlayer = 100f;
+	private float timeToGetToPlayer = 1.3f;
 
 	private Vector3 startingPos;
 
@@ -41,11 +41,12 @@ public class ZigZaggingEnemy : Enemy {
 		perpendicularToPlayer.Normalize();
 
 		//Move along the sine
-		transform.position = startingPos + (perpendicularToPlayer * Mathf.Sin (Time.time * sineFrequency) * sineMagnitude);
+		this.transform.position = startingPos + (perpendicularToPlayer * Mathf.Sin (Time.time * sineFrequency) * sineMagnitude);
 
 		//Also move toward the player.
 		directionToPlayer.Normalize();
-		this.transform.position += (directionToPlayer / timeToGetToPlayer);
-		startingPos += (directionToPlayer / timeToGetToPlayer);
+		var offset = Time.deltaTime * (directionToPlayer / timeToGetToPlayer);
+		this.transform.position += offset;
+		this.startingPos += offset;
 	}
 }

@@ -10,6 +10,8 @@ public class Player : MonoBehaviour {
 
 	public PolygonMaker polygon;
 
+	public int NumCapturedNutrients = 0;
+
 	float rotationSpeed;
 
 	Vector3? prevMousePosition;
