@@ -25,17 +25,17 @@ public class RotatingEnemy : Enemy {
 	{
 		base.DoUpdate();
 	
-		Vector2 positionOfPlayer = World.GetInstance().player.transform.position;
+		Vector3 positionOfPlayer = World.GetInstance().player.transform.position;
 
 		//Move the enemy at the same speed no matter how close the enmy is to the rotation origin.
-		float radius = Mathf.Abs((this.rigidbody2D.position - positionOfPlayer).magnitude);
+		float radius = Mathf.Abs((this.transform.position - positionOfPlayer).magnitude);
 		float circumference = 2 * Mathf.PI * radius;
 
 		//Rotate the enemy.
 		this.transform.RotateAround(positionOfPlayer, Vector3.forward, (this.rotateClockwise ? 1 : -1) * circumference / 70f);
 
 		//Move the enemy toward the center. This should maybe go faster as the enemy gets closer?
-		Vector3 directionToPlayer = -(this.rigidbody2D.position - positionOfPlayer);
+		Vector3 directionToPlayer = -(this.transform.position - positionOfPlayer);
 		directionToPlayer.Normalize();
 		this.transform.position += (directionToPlayer / 40);
 	}
