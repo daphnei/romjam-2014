@@ -12,7 +12,7 @@ public class BackgroundCycler : Pulser {
 	public float minLineColorFraction = 0.6f;
 	public float maxLineColorFraction = 0.9f;
 
-	public BackgroundPolygon bgPolygon;
+	public GameObject bgPolygon;
 	
 	private List<GameObject> lines;
 	private float time = 0;
@@ -29,8 +29,8 @@ public class BackgroundCycler : Pulser {
 //		float approxDistBetweenLines = Camera.main.pixelWidth / NUM_LINES;
 //		for (int i = 0; i < NUM_LINES; i++)
 //		{
-			GameObject g = Instantiate(bgPolygon) as GameObject;
-			g.transform.position = new Vector2(0, 0);
+			GameObject g = GameObject.Instantiate(bgPolygon) as GameObject;
+			g.transform.position = new Vector3(0, 0);
 			MeshRenderer mr = g.GetComponent<MeshRenderer>() as MeshRenderer;
 
 			mr.material.color = Color.red;
