@@ -8,7 +8,7 @@ public class PulseController : SceneSingleton<PulseController> {
 	public AudioSource song;
 	public float bpm;
 
-	private List<Pulser> pulsers;
+	private List<Pulser> pulsers = new List<Pulser>();
 	private int samplesElapsed = 0;
 	private int lastSamples = 0;
 
@@ -18,8 +18,6 @@ public class PulseController : SceneSingleton<PulseController> {
 
 	// Use this for initialization
 	void Start () {
-		pulsers = this.GetComponentsInChildren<Pulser>().ToList();
-
 		// nobody likes Newgrounds music
 //		song.volume = 0;
 		song.Play();
