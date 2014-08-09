@@ -27,6 +27,7 @@ public class Player : MonoBehaviour {
 
 	private GameObject nutrientParent;
 	private List<CapturedNutrient> nutrientList;
+	private int lastPlayerRotationDir = 1; //either 1 or -1
 
 	// Use this for initialization
 	void Awake() {
@@ -80,7 +81,10 @@ public class Player : MonoBehaviour {
 		this.prevRealTime = Time.realtimeSinceStartup;
 
 		//Slowly rotate the nutrients in the center so that they aren't completely just standing there.
-		this.nutrientParent.transform.Rotate(Vector3.forward * Time.deltaTime * 80);
+		//Rotate in the opposite direction to how the player is rotating, becuase it looks cool.
+		if (this.rotationSpeed != 0)
+			this.lastPlayerRotationDir = (this.rotationSpeed > 0 ? -1 : 1);
+		this.nutrientParent.transform.Rotate(Vector3.forward * Time.deltaTime * 80 * this.lastPlayerRotationDir);
 	}
 
 	private void OnPlayerTappedScreen() {
@@ -127,6 +131,7 @@ public class Player : MonoBehaviour {
 			CapturedNutrient nut = Object.Instantiate(this.nutrientPrefab) as CapturedNutrient;
 			nut.transform.parent = nutrientParent.transform;
 			nut.transform.localPosition = targetPosition;
+			nut.transform.localRotation = Quaternion.AngleAxis(0, Vector3.forward);
 
 			this.nutrientList.Add(nut);
 		}
