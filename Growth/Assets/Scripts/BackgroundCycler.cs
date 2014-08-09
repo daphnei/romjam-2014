@@ -26,15 +26,12 @@ public class BackgroundCycler : Pulser {
 
 		chooseBackgroundColor();
 
-		//Create a bunch of random vertical-ish lines.
-		float approxDistBetweenLines = Camera.main.pixelWidth / NUM_LINES;
-		for (int i = 0; i < NUM_LINES; i++)
-		{
-			float approxXPos = (approxDistBetweenLines * i) + (approxDistBetweenLines/2);
-			createLine(approxXPos);
-		}
-
-
+//		float approxDistBetweenLines = Camera.main.pixelWidth / NUM_LINES;
+//		for (int i = 0; i < NUM_LINES; i++)
+//		{
+//			float approxXPos = (approxDistBetweenLines * i) + (approxDistBetweenLines/2);
+//			createLine(approxXPos);
+//		}
 	}
 
 	// Update is called once per frame
@@ -84,21 +81,19 @@ public class BackgroundCycler : Pulser {
 	}
 	
 	public override void Pulse() {
-		nextTime += 0.25f;
-
-		float approxDistBetweenLines = Camera.main.pixelWidth / NUM_LINES;
-		
-		for (int i = 0; i < NUM_LINES; i++)
-		{
-			LineRenderer lr = lines[i].GetComponent<LineRenderer>() as LineRenderer;
-
-			//Choose a new random position
-			float approxXPos = (approxDistBetweenLines * i) + (approxDistBetweenLines/2);
-			updateLinePos(lr, approxXPos);
-			
-			//choose a new random color that is not too far off from the background color.
-			float fract = Random.Range(minLineColorFraction, maxLineColorFraction);
-			lr.material.color = Camera.main.backgroundColor * fract;
-		}
+//		float approxDistBetweenLines = Camera.main.pixelWidth / NUM_LINES;
+//		
+//		for (int i = 0; i < NUM_LINES; i++)
+//		{
+//			LineRenderer lr = lines[i].GetComponent<LineRenderer>() as LineRenderer;
+//
+//			//Choose a new random position
+//			float approxXPos = (approxDistBetweenLines * i) + (approxDistBetweenLines/2);
+//			updateLinePos(lr, approxXPos);
+//			
+//			//choose a new random color that is not too far off from the background color.
+//			float fract = Random.Range(minLineColorFraction, maxLineColorFraction);
+//			lr.material.color = Camera.main.backgroundColor * fract;
+//		}
 	}
 }
