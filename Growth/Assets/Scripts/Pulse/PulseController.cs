@@ -23,12 +23,19 @@ public class PulseController : SceneSingleton<PulseController> {
 		samplesElapsed += song.timeSamples - lastSamples;
 		lastSamples = song.timeSamples;
 
-		if (samplesElapsed > (bpm / 60.0f) * 41800) {
+		if (Input.GetKeyDown(KeyCode.Space)) {
+			PulseAll();
+		}
+
+		if (samplesElapsed > (bpm / 60) * 41800) {
 			samplesElapsed = 0;
-	
-			foreach (Pulser pulser in this.pulsers) {
-				pulser.Pulse();
-			}
+			PulseAll();
+		}
+	}
+
+	void PulseAll() {
+		foreach (Pulser pulser in this.pulsers) {
+			pulser.Pulse();
 		}
 	}
 

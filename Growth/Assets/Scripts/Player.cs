@@ -9,6 +9,7 @@ public class Player : MonoBehaviour {
 	public float angleExaggerateIncrease = 0.5f;
 
 	public PolygonMaker polygon;
+	public GameObject bulletContainer;
 
 	public int NumCapturedNutrients = 0;
 
@@ -55,7 +56,19 @@ public class Player : MonoBehaviour {
 		if (Input.GetMouseButtonUp(0)) {
 			Vector3[] vertices = this.polygon.vertices;
 			for (int i = 0; i < vertices.Length; i++) {
-
+				int i1 = i == 0 ? vertices.Length-1 : i - 1;
+				int i2 = i;
+				Vector3 v1 = this.polygon.transform.TransformPoint(vertices[i1]);
+				Vector3 v2 = this.polygon.transform.TransformPoint(vertices[i2]);
+				GameObject g = new GameObject();
+				g.AddComponent<Bullet>().localVelocity = (vertices[i1] + vertices[i2]) / 2;
+				LineRenderer lr = g.AddComponent<LineRenderer>();
+				lr.transform.parent = this.bulletContainer.transform;
+				lr.useWorldSpace = false;
+				lr.SetVertexCount(2);
+				lr.SetPosition(0, v1);
+				lr.SetPosition(1, v2);
+				lr.SetWidth(0.1f, 0.1f);
 			}
 		}
 	}
