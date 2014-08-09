@@ -2,15 +2,14 @@
 using System.Collections;
 
 public class ZigZaggingEnemy : MonoBehaviour {
-
-	// Use this for initialization
-	void Start () {
-		this.rigidbody2D.velocity = new Vector2(1, 0);
-		this.transform.rotation = Quaternion.AngleAxis(20, Vector2.one);
+	float fMagnitude = 0.75f;
+	Vector3 v3Axis = new Vector3(0f, 1f, 0);
+	
+	void Start() {
+		v3Axis.Normalize();
 	}
 	
-	// Update is called once per frame
 	void Update () {
-
+		transform.localPosition = v3Axis * Mathf.Sin (Time.time) * fMagnitude;
 	}
 }
