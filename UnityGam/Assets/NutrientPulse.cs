@@ -32,6 +32,7 @@ public class NutrientPulse : MonoBehaviour {
 
 	void Pulse() {
 		pulseCount = 0;
+		parts.Emit(20);
 	}
 
 	// Update is called once per frame
@@ -58,7 +59,5 @@ public class NutrientPulse : MonoBehaviour {
 
 		light.intensity = this.core.localScale.x;
 		light.range = this.ring.localScale.x;
-
-		parts.Emit((int)(10 * (pulse-1)));
 	}
 }
