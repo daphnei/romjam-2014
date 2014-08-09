@@ -5,8 +5,7 @@ public class CapturedNutrient : Pulser {
 
 	NutrientAnimator animatorObj;
 
-	// Use this for initialization
-	void Start () {
+	protected override void Start() {
 		this.animatorObj = this.GetComponent<NutrientAnimator>();
 		base.Start();
 	}

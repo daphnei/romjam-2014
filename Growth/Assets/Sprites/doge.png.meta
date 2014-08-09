@@ -1,6 +1,8 @@
 fileFormatVersion: 2
 guid: 10b108b7afc453f46971b995e614969d
 TextureImporter:
+  fileIDToRecycleName:
+    21300000: doge
   serializedVersion: 2
   mipmaps:
     mipMapMode: 0

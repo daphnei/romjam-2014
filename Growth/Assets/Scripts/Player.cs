@@ -6,7 +6,7 @@ public class Player : MonoBehaviour {
 
 	const float TAP_TIME = 0.2f;
 	const float TAP_RADIUS = 20f;
-	const float LINE_WIDTH = 0.2f;
+	const float LINE_WIDTH = 0.1f;
 
 	public float rotationFriction = 600;
 	public float maxRotationSpeed = 1500;
@@ -37,6 +37,7 @@ public class Player : MonoBehaviour {
 		this.nutrientParent.transform.position = this.transform.position;
 		this.nutrientList = new List<CapturedNutrient>();
 	}
+
 
 	// Update is called once per frame
 	void Update() {
@@ -73,6 +74,7 @@ public class Player : MonoBehaviour {
 				this.touchTime = 0;
 			}
 		}
+
 		Time.timeScale = Mathf.Clamp(Mathf.Abs(this.rotationSpeed) / 80f, 0.2f, 3f);
 		this.rotationSpeed = Mathf.Clamp(this.rotationSpeed, -maxRotationSpeed, maxRotationSpeed);
 		this.transform.Rotate(new Vector3(0, 0, 1), this.rotationSpeed * realDeltaTime);
@@ -113,10 +115,16 @@ public class Player : MonoBehaviour {
 			colliderObj.name = "Collider";
 			colliderObj.transform.parent = g.transform;
 			colliderObj.transform.position = g.transform.position;
+			colliderObj.AddComponent<BulletCollider>().bullet = g.GetComponent<Bullet>();
+
+			Rigidbody2D rb = colliderObj.AddComponent<Rigidbody2D>();
+			rb.isKinematic = false;
+			rb.gravityScale = 0;
 
 			BoxCollider2D bc = colliderObj.AddComponent<BoxCollider2D>();
 			bc.size = new Vector2((v1 - v2).magnitude, LINE_WIDTH);
 			bc.transform.Rotate(new Vector3(0, 0, 1), (v1 - v2).ToVector2().AngleFromUnitX());
+			bc.isTrigger = true;
 		}
 	}
 
