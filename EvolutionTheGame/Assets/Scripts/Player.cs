@@ -15,7 +15,7 @@ public class Player : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		World.GetInstance().player = this;
+		World.Instance.player = this;
 	}
 	
 	// Update is called once per frame
