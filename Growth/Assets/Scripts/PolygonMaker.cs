@@ -2,8 +2,9 @@
 using System.Collections;
 
 public class PolygonMaker : MonoBehaviour {
-	
+
 	private MeshFilter filter;
+	private PolygonCollider2D pcollider;
 
 	public Vector3[] vertices { get { return this.filter.mesh.vertices; } }
 
@@ -15,6 +16,7 @@ public class PolygonMaker : MonoBehaviour {
 			if (value >= 3 && value !=this._numsides) {
 				this._numsides = value;
 				this.filter.mesh = makeMesh(this._numsides);
+				this.pcollider.CreatePrimitive(this._numsides, new Vector2(1, 1), new Vector2(0, 0));
 			}
 		}
 	}
@@ -73,6 +75,7 @@ public class PolygonMaker : MonoBehaviour {
 	// Use this for initialization
 	void Start() {
 		filter = this.gameObject.GetComponent<MeshFilter>();
+		pcollider = this.gameObject.GetComponent<PolygonCollider2D>();
 		this.filter.mesh = makeMesh(this._numsides);
 	}
 
