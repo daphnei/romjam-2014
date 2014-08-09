@@ -3,10 +3,10 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-public class PulseController : MonoBehaviour {
+public class PulseController : SceneSingleton<PulseController> {
 
 	public AudioSource song;
-	public int bpm;
+	public float bpm;
 
 	private List<Pulser> pulsers;
 	private int samplesElapsed = 0;
@@ -23,16 +23,21 @@ public class PulseController : MonoBehaviour {
 		samplesElapsed += song.timeSamples - lastSamples;
 		lastSamples = song.timeSamples;
 
-		if (samplesElapsed > (bpm / 60) * 41800) {
+		if (samplesElapsed > (bpm / 60.0f) * 41800) {
 			samplesElapsed = 0;
-
+	
 			foreach (Pulser pulser in this.pulsers) {
 				pulser.Pulse();
 			}
 		}
 	}
 
-	void AddPulser(Pulser pulser) {
-		this.pulsers.Add(pulser);
+	public void AddPulser(Pulser pulser) {
+		if (!this.pulsers.Contains(pulser))
+			this.pulsers.Add(pulser);
+	}
+
+	public void RemovePulser(Pulser p) {
+		this.pulsers.Remove(p);	
 	}
 }
