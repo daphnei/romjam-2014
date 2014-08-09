@@ -5,6 +5,8 @@ public class PolygonMaker : MonoBehaviour {
 	
 	private MeshFilter filter;
 
+	public Vector3[] vertices { get { return this.filter.mesh.vertices; } }
+
 	public int _numsides = 3; //public to set in editor. pls no abus.
 	public int numsides {
 		get { return this._numsides; }

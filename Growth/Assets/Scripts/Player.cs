@@ -3,10 +3,12 @@ using System.Collections;
 
 public class Player : MonoBehaviour {
 
-	public float RotationFriction = 600;
-	public float MaxRotationSpeed = 1500;
-	public float AngleExaggerateDistance = 1.75f;
-	public float AngleExaggerateIncrease = 0.5f;
+	public float rotationFriction = 600;
+	public float maxRotationSpeed = 1500;
+	public float angleExaggerateDistance = 1.75f;
+	public float angleExaggerateIncrease = 0.5f;
+
+	public PolygonMaker polygon;
 
 	float rotationSpeed;
 
@@ -31,7 +33,7 @@ public class Player : MonoBehaviour {
 			Vector3 angleV = worldMousePrev - this.transform.position;
 			float angle = Vector3.Angle(prevAngleV, angleV) * Mathf.Sign(Vector3.Dot(prevAngleV, angleV.ToVector2().Rotate90DegreesCounterClockwise()));
 			float distance = (worldMouse - this.transform.position).magnitude;
-			angle *= distance < AngleExaggerateDistance ? 1 : 1 + (distance - AngleExaggerateDistance) * AngleExaggerateIncrease;
+			angle *= distance < angleExaggerateDistance ? 1 : 1 + (distance - angleExaggerateDistance) * angleExaggerateIncrease;
 
 			this.rotationSpeed = angle / Time.deltaTime;
 			this.averageRotateSpeed = this.averageRotateSpeed == 0 ? this.rotationSpeed : (this.rotationSpeed + this.averageRotateSpeed) / 2;
@@ -44,9 +46,16 @@ public class Player : MonoBehaviour {
 			}
 		}
 
-		this.rotationSpeed = Mathf.Clamp(this.rotationSpeed, -MaxRotationSpeed, MaxRotationSpeed);
+		this.rotationSpeed = Mathf.Clamp(this.rotationSpeed, -maxRotationSpeed, maxRotationSpeed);
 		this.transform.Rotate(new Vector3(0, 0, 1), this.rotationSpeed * Time.deltaTime);
-		this.rotationSpeed = this.rotationSpeed.AbsSubtract(RotationFriction * Time.deltaTime);
+		this.rotationSpeed = this.rotationSpeed.AbsSubtract(rotationFriction * Time.deltaTime);
+
+		if (Input.GetMouseButtonUp(0)) {
+			Vector3[] vertices = this.polygon.vertices;
+			for (int i = 0; i < vertices.Length; i++) {
+
+			}
+		}
 	}
 
 	void OnGUI() {
