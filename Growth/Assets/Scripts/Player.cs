@@ -105,9 +105,14 @@ public class Player : MonoBehaviour {
 			lr.SetPosition(1, v2 - vCenter);
 			lr.SetWidth(LINE_WIDTH, LINE_WIDTH);
 
-			/*BoxCollider2D bc = g.AddComponent<BoxCollider2D>();
-			bc.size = new Vector2(LINE_WIDTH, (v1 - v2).magnitude);
-			bc.transform.Rotate(new Vector3(0, 0, 1), (v2 - v1).ToVector2().AngleFromUnitX());*/
+			GameObject colliderObj = new GameObject();
+			colliderObj.name = "Collider";
+			colliderObj.transform.parent = g.transform;
+			colliderObj.transform.position = g.transform.position;
+
+			BoxCollider2D bc = colliderObj.AddComponent<BoxCollider2D>();
+			bc.size = new Vector2((v1 - v2).magnitude, LINE_WIDTH);
+			bc.transform.Rotate(new Vector3(0, 0, 1), (v1 - v2).ToVector2().AngleFromUnitX());
 		}
 	}
 
