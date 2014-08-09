@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
-public class RotatingEnemy : Critter {
+public class RotatingEnemy : Enemy {
 	private bool rotateClockwise = true;
 
 	/**

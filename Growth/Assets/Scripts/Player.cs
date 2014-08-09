@@ -130,8 +130,10 @@ public class Player : MonoBehaviour {
 
 			this.nutrientList.Add(nut);
 		}
-			//Reached the max number of nutrients for this polygom. Time to grow an extra side!
+
+		//Reached the max number of nutrients for this polygom. Time to grow an extra side!
 		else {
+
 			//First delete all the nutrients.
 			foreach (CapturedNutrient nut in this.nutrientList) {
 				Object.Destroy(nut.gameObject);
@@ -143,6 +145,16 @@ public class Player : MonoBehaviour {
 	}
 
 	public void RemoveNutrient() {
+	    if (this.nutrientList.Count == 0 && this.polygon.numsides > 3) {
+			this.polygon.removeNode();
+
+			for (int i = 0; i < this.polygon.numsides; i++) {
+				this.AddNutrient();
+			}
+		} else if (this.nutrientList.Count > 0) {
+			CapturedNutrient n = this.nutrientList.Pop();
+			GameObject.Destroy(n.gameObject);
+		}
 	}
 
 	void OnGUI() {
