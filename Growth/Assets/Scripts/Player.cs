@@ -1,17 +1,19 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class Player : MonoBehaviour {
-
+	public CapturedNutrient nutrient;
+	private GameObject nutrientParent;
+	private List<CapturedNutrient> nutrientList;
+	
 	public float rotationFriction = 600;
 	public float maxRotationSpeed = 1500;
 	public float angleExaggerateDistance = 1.75f;
 	public float angleExaggerateIncrease = 0.5f;
 
 	public PolygonMaker polygon;
-
-	public int NumCapturedNutrients = 0;
-
+	
 	float rotationSpeed;
 
 	Vector3? prevMousePosition;
@@ -20,6 +22,10 @@ public class Player : MonoBehaviour {
 	// Use this for initialization
 	void Awake () {
 		World.Instance.Register(this);
+
+		this.nutrientParent = new GameObject();
+		this.nutrientParent.transform.position = this.transform.position;
+		this.nutrientList = new List<CapturedNutrient>();
 	}
 	
 	// Update is called once per frame
@@ -58,6 +64,50 @@ public class Player : MonoBehaviour {
 
 			}
 		}
+
+		//Slowly rotate the nutrients in the center so that they aren't completely just standing there.
+		this.nutrientParent.transform.Rotate(Vector3.forward * Time.deltaTime * 80);
+	}
+
+	public void AddNutrient()
+	{
+		int curNumVertices = this.polygon.vertices.Length;
+
+		//Add a nutrient if we're not at the max.
+		if (this.nutrientList.Count < curNumVertices)
+		{
+			float angleOfNewNut = (360 / curNumVertices) * this.nutrientList.Count;
+			float angleOfNewNutInRadians = Mathf.Deg2Rad * angleOfNewNut;
+			
+			float radius = 0.5f;
+			Vector2 targetPosition = new Vector2(
+				radius * Mathf.Cos(angleOfNewNutInRadians),
+				radius * Mathf.Sin(angleOfNewNutInRadians));
+
+			CapturedNutrient nut = Object.Instantiate(this.nutrient) as CapturedNutrient;
+			nut.transform.parent = nutrientParent.transform;
+
+			nut.transform.localPosition = targetPosition;
+
+			this.nutrientList.Add(nut);
+		}
+		//Reached the max number of nutrients for this polygom. Time to grow an extra side!
+		else
+		{
+			//First delete all the nutrients.
+			foreach (CapturedNutrient nut in this.nutrientList)
+			{
+				Object.Destroy(nut);
+			}
+
+			this.nutrientList.Clear();
+
+			this.polygon.addNode();
+		}
+	}
+
+	public void RemoveNutrient()
+	{
 	}
 
 	void OnGUI() {

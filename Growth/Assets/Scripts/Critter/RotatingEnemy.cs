@@ -12,13 +12,13 @@ public class RotatingEnemy : Critter {
 	public float minSpeed = 0.91f;
 	public float maxSpeed = 2.0f;
 
-	private float timeToGetToPlayer;
+	private float speedToCenter;
 
 	// Use this for initialization
 	public override void DoStart () {
 		base.DoStart();
 
-		this.timeToGetToPlayer = Random.Range(minSpeed, maxSpeed);
+		this.speedToCenter = Random.Range(minSpeed, maxSpeed);
 
 		//Debug.Log(this.rigidbody2D.position);
 	}
@@ -41,7 +41,7 @@ public class RotatingEnemy : Critter {
 		//Move the enemy toward the center. This should maybe go faster as the enemy gets closer?
 		Vector3 directionToPlayer = -(this.transform.position - positionOfPlayer);
 		directionToPlayer.Normalize();
-		this.transform.position += Time.deltaTime * (directionToPlayer * timeToGetToPlayer);
+		this.transform.position += Time.deltaTime * (directionToPlayer * speedToCenter);
 	}
 
 	//Only start these enemies on the long side because they don't work well starting on the short side.

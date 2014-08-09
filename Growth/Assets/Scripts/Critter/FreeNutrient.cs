@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Nutrient : Critter {
+public class FreeNutrient : Critter {
 	
 	// Update is called once per frame
 	override public void DoUpdate () {
@@ -13,5 +13,12 @@ public class Nutrient : Critter {
 		Vector3 directionToPlayer = -(this.transform.position - positionOfPlayer);
 		directionToPlayer.Normalize();
 				this.transform.position += Time.deltaTime * (directionToPlayer * 1.5f);
+	}
+
+	override protected void HitThePlayer()
+	{
+		base.HitThePlayer();
+
+		World.Instance.player.AddNutrient();
 	}
 }
