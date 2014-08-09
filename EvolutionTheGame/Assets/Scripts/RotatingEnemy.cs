@@ -9,16 +9,17 @@ public class RotatingEnemy : Enemy {
 	 */
 	public float rotationSpeed = 1;
 
+	private float timeToGetToPlayer;
+
 	// Use this for initialization
-	void Start () {
+	public override void DoStart () {
+		base.DoStart();
+
 		this.rotateClockwise = Random.value >= 0.5f;
 
+		this.timeToGetToPlayer = Random.Range(30, 70);
+
 		//Debug.Log(this.rigidbody2D.position);
-	}
-	
-	// Update is called once per frame
-	void Update () {
-		DoUpdate();
 	}
 
 	override public void DoUpdate()
@@ -37,6 +38,21 @@ public class RotatingEnemy : Enemy {
 		//Move the enemy toward the center. This should maybe go faster as the enemy gets closer?
 		Vector3 directionToPlayer = -(this.transform.position - positionOfPlayer);
 		directionToPlayer.Normalize();
-		this.transform.position += (directionToPlayer / 40);
+		this.transform.position += (directionToPlayer / timeToGetToPlayer);
+	}
+
+	//Only start these enemies on the long side because they don't work well starting on the short side.
+	override protected void ChooseSpawnPoint()
+	{
+		//How far off screen to do initial position;
+		int d = 2;
+		
+		//Choose a spawn point on one of the edges of the viewport.
+		Vector2 spawnPoint = new Vector2(
+				Random.Range(0, Camera.main.pixelWidth),
+				Random.value >= 0.5 ? -d : Camera.main.pixelHeight + d);
+		spawnPoint = Camera.main.ScreenToWorldPoint(spawnPoint);
+		
+		this.transform.position = spawnPoint;
 	}
 }
