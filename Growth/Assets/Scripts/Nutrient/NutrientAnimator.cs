@@ -31,7 +31,7 @@ public class NutrientAnimator : Pulser {
 	}
 
 	override public void Pulse() {
-		Debug.Log("!");
+//		Debug.Log("!");
 		pulseCount = 0;
 		parts.Emit(20);
 	}

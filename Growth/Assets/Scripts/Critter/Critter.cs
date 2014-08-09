@@ -77,7 +77,7 @@ public class Critter : Pulser {
 		this.transform.position = spawnPoint;
 	}
 
-	public override void Pulse ()
+	public override void Pulse()
 	{
 		base.Pulse();
 		this.transform.localScale = this.initialScale * 2;

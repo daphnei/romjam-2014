@@ -29,7 +29,7 @@ public class FreeNutrient : Critter {
 	}
 
 	override public void Pulse() {
-		Debug.Log(this.animatorObj);
+//		Debug.Log(this.animatorObj);
 		this.animatorObj.Pulse();
 	}
 }

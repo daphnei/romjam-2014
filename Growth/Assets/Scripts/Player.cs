@@ -27,6 +27,7 @@ public class Player : MonoBehaviour {
 
 	private GameObject nutrientParent;
 	private List<CapturedNutrient> nutrientList;
+	private int lastPlayerRotationDir = 1; //either 1 or -1
 
 	// Use this for initialization
 	void Awake() {
@@ -81,8 +82,11 @@ public class Player : MonoBehaviour {
 
 		this.prevRealTime = Time.realtimeSinceStartup;
 
-		// Slowly rotate the nutrients in the center so that they aren't completely just standing there.
-		this.nutrientParent.transform.Rotate(Vector3.forward * Time.deltaTime * 80);
+		//Slowly rotate the nutrients in the center so that they aren't completely just standing there.
+		//Rotate in the opposite direction to how the player is rotating, becuase it looks cool.
+		if (this.rotationSpeed != 0)
+			this.lastPlayerRotationDir = (this.rotationSpeed > 0 ? -1 : 1);
+		this.nutrientParent.transform.Rotate(Vector3.forward * Time.deltaTime * 80 * this.lastPlayerRotationDir);
 	}
 
 	private void OnPlayerTappedScreen() {
@@ -140,11 +144,14 @@ public class Player : MonoBehaviour {
 			CapturedNutrient nut = Object.Instantiate(this.nutrientPrefab) as CapturedNutrient;
 			nut.transform.parent = nutrientParent.transform;
 			nut.transform.localPosition = targetPosition;
+			nut.transform.localRotation = Quaternion.AngleAxis(0, Vector3.forward);
 
 			this.nutrientList.Add(nut);
 		}
-			//Reached the max number of nutrients for this polygom. Time to grow an extra side!
+
+		//Reached the max number of nutrients for this polygom. Time to grow an extra side!
 		else {
+
 			//First delete all the nutrients.
 			foreach (CapturedNutrient nut in this.nutrientList) {
 				Object.Destroy(nut.gameObject);
@@ -156,6 +163,16 @@ public class Player : MonoBehaviour {
 	}
 
 	public void RemoveNutrient() {
+	    if (this.nutrientList.Count == 0 && this.polygon.numsides > 3) {
+			this.polygon.removeNode();
+
+			for (int i = 0; i < this.polygon.numsides; i++) {
+				this.AddNutrient();
+			}
+		} else if (this.nutrientList.Count > 0) {
+			CapturedNutrient n = this.nutrientList.Pop();
+			GameObject.Destroy(n.gameObject);
+		}
 	}
 
 	void OnGUI() {
