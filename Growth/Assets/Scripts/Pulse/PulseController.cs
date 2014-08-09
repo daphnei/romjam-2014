@@ -15,11 +15,19 @@ public class PulseController : SceneSingleton<PulseController> {
 	// Use this for initialization
 	void Start () {
 		pulsers = this.GetComponentsInChildren<Pulser>().ToList();
+
+		// nobody likes Newgrounds music
+		song.volume = 0;
 		song.Play();
 	}
 	
 	// Update is called once per frame
 	void Update () {
+		// song restarted
+		if (song.timeSamples < lastSamples) {
+			lastSamples = 0;
+		}
+
 		samplesElapsed += song.timeSamples - lastSamples;
 		lastSamples = song.timeSamples;
 
@@ -27,7 +35,7 @@ public class PulseController : SceneSingleton<PulseController> {
 			PulseAll();
 		}
 
-		if (samplesElapsed > (bpm / 60) * 41800) {
+		if (samplesElapsed > (60 / bpm) * 41800) {
 			samplesElapsed = 0;
 			PulseAll();
 		}
