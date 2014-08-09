@@ -14,7 +14,7 @@ public class ZigZaggingEnemy : Critter {
 	/**
 	 * A bigger value means it will take longer to get to the player.
 	 */
-	private float timeToGetToPlayer = 0.77f;
+	private float speedToCenter = 0.77f;
 
 	private Vector3 startingPos;
 
@@ -45,7 +45,7 @@ public class ZigZaggingEnemy : Critter {
 
 		//Also move toward the player.
 		directionToPlayer.Normalize();
-		var offset = Time.deltaTime * (directionToPlayer * timeToGetToPlayer);
+		var offset = Time.deltaTime * (directionToPlayer * speedToCenter);
 		this.transform.position += offset;
 		this.startingPos += offset;
 	}
