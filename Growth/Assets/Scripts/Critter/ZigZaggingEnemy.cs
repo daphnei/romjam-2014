@@ -1,7 +1,7 @@
-﻿using UnityEngine;
+using UnityEngine;
 using System.Collections;
 
-public class ZigZaggingEnemy : Enemy {
+public class ZigZaggingEnemy : Critter {
 	public float minSineMagnitude = 1;
 	public float maxSineMagnitude = 1.5f;
 
