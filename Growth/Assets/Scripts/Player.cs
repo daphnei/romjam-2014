@@ -8,6 +8,8 @@ public class Player : MonoBehaviour {
 	public float AngleExaggerateDistance = 1.75f;
 	public float AngleExaggerateIncrease = 0.5f;
 
+	public int NumCapturedNutrients = 0;
+
 	float rotationSpeed;
 
 	Vector3? prevMousePosition;
