@@ -30,5 +30,5 @@ sysinfo.txt
 */Thumbs.db
 /Growth/Assets/UnityVS/*
 /UnityGam/Assets/UnityVS/*
-/Growth/Assets/*
+#/Growth/Assets/*
 /UnityGam/Assets/*
