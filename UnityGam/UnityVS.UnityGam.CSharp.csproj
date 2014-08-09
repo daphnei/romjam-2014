@@ -51,6 +51,7 @@
     <Compile Include="Assets\Easing.cs" />
     <Compile Include="Assets\NutrientPulse.cs" />
     <Compile Include="Assets\PolygonMaker.cs" />
+    <Compile Include="Assets\SortParticles.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath)\SyntaxTree\UnityVS\2013\UnityVS.CSharp.targets" />
 </Project>

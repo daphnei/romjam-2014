@@ -25,7 +25,7 @@ public class RotatingEnemy : Enemy {
 	{
 		base.DoUpdate();
 	
-		Vector3 positionOfPlayer = World.GetInstance().player.transform.position;
+		Vector3 positionOfPlayer = World.Instance.player.transform.position;
 
 		//Move the enemy at the same speed no matter how close the enmy is to the rotation origin.
 		float radius = Mathf.Abs((this.transform.position - positionOfPlayer).magnitude);

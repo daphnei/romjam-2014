@@ -1,26 +1,16 @@
 ﻿using UnityEngine;
+using System;
 using System.Collections;
+using System.Collections.Generic;
 
-/**
- * Singleton that contains various useful things about the world. 
- */
-public class World {
-	public MonoBehaviour player;
+/// <summary>
+/// Singleton that contains various useful things about the world. 
+/// </summary>
+public class World : SceneSingleton<World> {
 
-	private static World me = null;
+	public Player player;
 
-	private World()
-	{
-		me = this;
-	}
-
-	public static World GetInstance()
-	{
-		if (me == null)
-		{
-			me = new World();
-		}
-
-		return me;
+	public void Register(Player player) {
+		this.player = player;
 	}
 }

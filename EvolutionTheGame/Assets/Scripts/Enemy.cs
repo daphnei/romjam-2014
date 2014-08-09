@@ -13,7 +13,7 @@ public class Enemy : MonoBehaviour {
 	}
 
 	virtual public void DoUpdate() {
-		Vector3 positionOfPlayer = World.GetInstance().player.transform.position;
+		Vector3 positionOfPlayer = World.Instance.player.transform.position;
 
 		//At some point this can be replaced with a check for collision?
 		if (Mathf.Abs((this.transform.position - positionOfPlayer).magnitude) < 1.5)
