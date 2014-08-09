@@ -16,4 +16,8 @@ public static class Helpers {
 	public static Vector2 Rotate90DegreesCounterClockwise(this Vector2 vector) {
 		return new Vector2(-vector.y, vector.x);
 	}
+
+	public static float AbsSubtract(this float value, float subtract) {
+		return Mathf.Abs(value) < Math.Abs(subtract) ? 0 : value - Mathf.Sign(value) * subtract;
+	}
 }
