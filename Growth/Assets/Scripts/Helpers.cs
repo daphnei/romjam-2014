@@ -21,6 +21,10 @@ public static class Helpers {
 		return new Vector2(-vector.y, vector.x);
 	}
 
+	public static float AngleFromUnitX(this Vector2 vector) {
+		return Vector3.Angle(new Vector3(1, 0), vector) * Mathf.Sign(Vector3.Dot(new Vector3(1, 0), vector.Rotate90DegreesCounterClockwise()));
+	}
+
 	public static float AbsSubtract(this float value, float subtract) {
 		return Mathf.Abs(value) < Math.Abs(subtract) ? 0 : value - Mathf.Sign(value) * subtract;
 	}

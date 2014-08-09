@@ -6,40 +6,39 @@ public class Player : MonoBehaviour {
 
 	const float TAP_TIME = 0.2f;
 	const float TAP_RADIUS = 20f;
+	const float LINE_WIDTH = 0.2f;
 
-	public CapturedNutrient nutrient;
-	private GameObject nutrientParent;
-	private List<CapturedNutrient> nutrientList;
-	
 	public float rotationFriction = 600;
 	public float maxRotationSpeed = 1500;
 	public float angleExaggerateDistance = 1.75f;
 	public float angleExaggerateIncrease = 0.5f;
 
 	public PolygonMaker polygon;
-
 	public GameObject bulletContainer;
+	public CapturedNutrient nutrientPrefab;
 
-	public int NumCapturedNutrients = 0;
-
-	public float rotationSpeed;
+	public float rotationSpeed { get; set; }
+	public int numberOfCapturedNutrients { get; set; }
 
 	Vector3? prevMousePosition;
 	float touchTime = 0;
 	float averageRotateSpeed;
 	float prevRealTime;
 
+	private GameObject nutrientParent;
+	private List<CapturedNutrient> nutrientList;
+
 	// Use this for initialization
-	void Awake () {
+	void Awake() {
 		World.Instance.Register(this);
 
 		this.nutrientParent = new GameObject();
 		this.nutrientParent.transform.position = this.transform.position;
 		this.nutrientList = new List<CapturedNutrient>();
 	}
-	
+
 	// Update is called once per frame
-	void Update () {
+	void Update() {
 		float realDeltaTime = Time.realtimeSinceStartup - this.prevRealTime;
 
 		if (Input.GetMouseButton(0)) {
@@ -91,57 +90,59 @@ public class Player : MonoBehaviour {
 			int i2 = i;
 			Vector3 v1 = this.polygon.transform.TransformPoint(vertices[i1]);
 			Vector3 v2 = this.polygon.transform.TransformPoint(vertices[i2]);
+			Vector3 vCenter = (v1 + v2) / 2;
+
 			GameObject g = new GameObject();
+			g.transform.position = vCenter;
+			g.name = "Bullet";
 			g.AddComponent<Bullet>().localVelocity = (vertices[i1] + vertices[i2]) / 2;
+
 			LineRenderer lr = g.AddComponent<LineRenderer>();
 			lr.transform.parent = this.bulletContainer.transform;
 			lr.useWorldSpace = false;
 			lr.SetVertexCount(2);
-			lr.SetPosition(0, v1);
-			lr.SetPosition(1, v2);
-			lr.SetWidth(0.1f, 0.1f);
+			lr.SetPosition(0, v1 - vCenter);
+			lr.SetPosition(1, v2 - vCenter);
+			lr.SetWidth(LINE_WIDTH, LINE_WIDTH);
+
+			/*BoxCollider2D bc = g.AddComponent<BoxCollider2D>();
+			bc.size = new Vector2(LINE_WIDTH, (v1 - v2).magnitude);
+			bc.transform.Rotate(new Vector3(0, 0, 1), (v2 - v1).ToVector2().AngleFromUnitX());*/
 		}
 	}
 
-	public void AddNutrient()
-	{
+	public void AddNutrient() {
 		int curNumVertices = this.polygon.vertices.Length;
 
 		//Add a nutrient if we're not at the max.
-		if (this.nutrientList.Count < curNumVertices)
-		{
+		if (this.nutrientList.Count < curNumVertices) {
 			float angleOfNewNut = (360 / curNumVertices) * this.nutrientList.Count;
 			float angleOfNewNutInRadians = Mathf.Deg2Rad * angleOfNewNut;
-			
+
 			float radius = 0.5f;
 			Vector2 targetPosition = new Vector2(
 				radius * Mathf.Cos(angleOfNewNutInRadians),
 				radius * Mathf.Sin(angleOfNewNutInRadians));
 
-			CapturedNutrient nut = Object.Instantiate(this.nutrient) as CapturedNutrient;
+			CapturedNutrient nut = Object.Instantiate(this.nutrientPrefab) as CapturedNutrient;
 			nut.transform.parent = nutrientParent.transform;
-
 			nut.transform.localPosition = targetPosition;
 
 			this.nutrientList.Add(nut);
 		}
-		//Reached the max number of nutrients for this polygom. Time to grow an extra side!
-		else
-		{
+			//Reached the max number of nutrients for this polygom. Time to grow an extra side!
+		else {
 			//First delete all the nutrients.
-			foreach (CapturedNutrient nut in this.nutrientList)
-			{
+			foreach (CapturedNutrient nut in this.nutrientList) {
 				Object.Destroy(nut.gameObject);
 			}
 
 			this.nutrientList.Clear();
-
 			this.polygon.addNode();
 		}
 	}
 
-	public void RemoveNutrient()
-	{
+	public void RemoveNutrient() {
 	}
 
 	void OnGUI() {
