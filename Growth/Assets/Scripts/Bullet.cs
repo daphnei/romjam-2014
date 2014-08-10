@@ -30,7 +30,7 @@ public class Bullet : MonoBehaviour {
 		float length = lengthPerDistance * distance.magnitude;
 		Vector2 unitDir = distance.Rotate90DegreesCounterClockwise().normalized;
 		Vector2 v1 = this.transform.position.ToVector2() + unitDir * (length / 2);
-		Vector2 v2 = v1 - unitDir * length;
+		Vector2 v2 = v1 - unitDir * (length + Player.LINE_WIDTH * 0.4f);
 		this.lineRenderer.SetPosition(0, v1);
 		this.lineRenderer.SetPosition(1, v2);
 

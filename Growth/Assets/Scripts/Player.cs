@@ -4,9 +4,9 @@ using System.Collections.Generic;
 
 public class Player : MonoBehaviour {
 
+	public const float LINE_WIDTH = 0.17f;
 	const float TAP_TIME = 0.2f;
 	const float TAP_RADIUS = 20f;
-	const float LINE_WIDTH = 0.1f;
 	const float SPAWN_TIME = 2f;
 
 	public float rotationFriction = 600;
@@ -31,7 +31,7 @@ public class Player : MonoBehaviour {
 	private List<CapturedNutrient> nutrientList;
 	private int lastPlayerRotationDir = 1; //either 1 or -1
 
-	private bool canFire;
+	private bool canFire = true;
 
 	// Use this for initialization
 	void Awake() {
@@ -40,16 +40,24 @@ public class Player : MonoBehaviour {
 		this.nutrientParent = new GameObject();
 		this.nutrientParent.transform.position = this.transform.position;
 		this.nutrientList = new List<CapturedNutrient>();
+
+		this.polygon.NumberOfSidesChanged += this.CreateBulletRing;
+		this.polygon.NumberOfSidesTransitionStart += this.DeleteBullets;
+	}
+
+	void Start() {
+		this.DeleteBullets();
+		this.CreateBulletRing();
 	}
 
 	// Update is called once per frame
 	void Update() {
 		float realDeltaTime = Time.realtimeSinceStartup - this.prevRealTime;
 
-		if (this.bulletContainer.transform.childCount == 0) {
+		/*if (this.bulletContainer.transform.childCount == 0) {
 			this.canFire = true;
 			this.bulletContainer.transform.localRotation = Quaternion.Euler(Vector3.zero);
-		}
+		}*/
 
 		if (Input.GetMouseButton(0)) {
 			if (!this.prevMousePosition.HasValue) {
@@ -83,7 +91,7 @@ public class Player : MonoBehaviour {
 			}
 		}
 
-//		Time.timeScale = Mathf.Clamp(Mathf.Abs(this.rotationSpeed) / 80f, 0.2f, 3f);
+		//		Time.timeScale = Mathf.Clamp(Mathf.Abs(this.rotationSpeed) / 80f, 0.2f, 3f);
 
 		this.rotationSpeed = Mathf.Clamp(this.rotationSpeed, -maxRotationSpeed, maxRotationSpeed);
 		this.transform.Rotate(new Vector3(0, 0, 1), this.rotationSpeed * realDeltaTime);
@@ -98,23 +106,26 @@ public class Player : MonoBehaviour {
 		this.nutrientParent.transform.Rotate(Vector3.forward * Time.deltaTime * 80 * this.lastPlayerRotationDir);
 
 		// Handle spawn timers.
-		this.spawnTimer -= Time.deltaTime;
+		/*this.spawnTimer -= Time.deltaTime;
 		if (this.spawnTimer <= 0) {
 			this.CreateBulletRing();
 			this.spawnTimer = SPAWN_TIME;
+		}*/
+	}
+
+	void DeleteBullets() {
+		foreach (Transform t in this.bulletContainer.transform) {
+			Destroy(t.gameObject);
 		}
 	}
 
 	private void CreateBulletRing() {
-				if (!this.canFire) {
+		if (!this.canFire) {
 			return;
 		}
 		Vector3[] vertices = this.polygon.vertices;
-		int missingIndex = Random.Range(0, vertices.Length - 1);
+		//int missingIndex = Random.Range(0, vertices.Length - 1);
 		for (int i = 0; i < vertices.Length; i++) {
-			if (missingIndex == i) {
-				continue;
-			}
 			int i1 = i == 0 ? vertices.Length - 1 : i - 1;
 			int i2 = i;
 			this.CreateBullet(vertices, i1, i2);
@@ -127,11 +138,11 @@ public class Player : MonoBehaviour {
 		Vector3 vCenter = (v1 + v2) / 2;
 
 		GameObject g = new GameObject();
-		g.transform.position = vCenter;
+		g.transform.position = vCenter * 1.2f;
 		g.name = "Bullet";
 
 		Bullet bullet = g.AddComponent<Bullet>();
-		bullet.localVelocity = (vertices[i1] + vertices[i2]) / 2;
+		//bullet.localVelocity = (vertices[i1] + vertices[i2]) / 2;
 		bullet.lengthPerDistance = (v1 - v2).magnitude / (vCenter - this.transform.position).magnitude;
 		bullet.centerPosition = this.transform.position;
 
@@ -195,7 +206,7 @@ public class Player : MonoBehaviour {
 	}
 
 	public void RemoveNutrient() {
-	    if (this.nutrientList.Count == 0 && this.polygon.numsides > 3) {
+		if (this.nutrientList.Count == 0 && this.polygon.numsides > 3) {
 			this.polygon.removeNode();
 
 			for (int i = 0; i < this.polygon.numsides; i++) {
