@@ -37,7 +37,7 @@ public class FreeNutrient : Critter {
 		base.DoUpdate();
 
 		Vector3 viewportCoords = Camera.main.WorldToViewportPoint(this.transform.position);
-		if (viewportCoords.x < -0.2f || viewportCoords.x > 1.2f || viewportCoords.y < -0.2f || viewportCoords.y > 1.2f) {
+		if (viewportCoords.x < -0.5f || viewportCoords.x > 1.5f || viewportCoords.y < -0.5f || viewportCoords.y > 1.5f) {
 			GameObject.Destroy(this);	
 		}
 
