@@ -11,7 +11,7 @@ public class BulletCollider : MonoBehaviour {
 			if (nutrient.Color == bullet.Color) {
 				Destroy(other.gameObject);
 			
-				World.Instance.player.AddNutrient();
+				World.Instance.player.AddNutrient(nutrient.Color);
 			} else {
 				nutrient.movementSign = -1;
 

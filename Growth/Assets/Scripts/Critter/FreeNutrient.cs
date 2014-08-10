@@ -30,9 +30,7 @@ public class FreeNutrient : Critter {
 		base.DoUpdate();
 
 		if (firstUpdate) {
-			Array values = Enum.GetValues(typeof(NutrientColor));
-			int possibleColors = World.Instance.player.polygon.numsides;
-			animatorObj.Color = (NutrientColor)values.GetValue(UnityEngine.Random.Range(0, possibleColors));
+			animatorObj.Color = randomColor();
 
 			firstUpdate = false;
 		}
@@ -48,11 +46,20 @@ public class FreeNutrient : Critter {
 	override protected void HitThePlayer()
 	{
 		base.HitThePlayer();
-		World.Instance.player.AddNutrient();
+		World.Instance.player.AddNutrient(this.Color);
 	}
 
 	override public void Pulse() {
 //		Debug.Log(this.animatorObj);
 		this.animatorObj.Pulse();
+	}
+
+	public static NutrientColor randomColor()
+	{
+		Array values = Enum.GetValues(typeof(NutrientColor));
+		int possibleColors = Mathf.Min(values.Length, World.Instance.player.polygon.numsides);
+		NutrientColor color = (NutrientColor)values.GetValue(UnityEngine.Random.Range(0, possibleColors));
+
+		return color;
 	}
 }

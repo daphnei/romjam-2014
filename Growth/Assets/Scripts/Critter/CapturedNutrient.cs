@@ -5,9 +5,20 @@ public class CapturedNutrient : Pulser {
 
 	NutrientAnimator animatorObj;
 
+	bool firstUpdate = true;
+
 	protected override void Start() {
 		this.animatorObj = this.GetComponent<NutrientAnimator>();
 		base.Start();
+	}
+
+	void Update()
+	{
+		if (firstUpdate) {
+			animatorObj.Color = animatorObj.Color;
+			
+			firstUpdate = false;
+		}
 	}
 
 	override public void Pulse() {
