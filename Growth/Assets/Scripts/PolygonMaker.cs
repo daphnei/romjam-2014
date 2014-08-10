@@ -144,10 +144,12 @@ public class PolygonMaker : MonoBehaviour {
 
 		if (!transitioning) {
 			if (Input.GetKey(KeyCode.S)) {
+				this.GetComponent<ImageManager>().updateTexture(_numsides - 2);
 				addNode();
 				Spin();
 			}
 			if (Input.GetKey(KeyCode.A)) {
+				this.GetComponent<ImageManager>().updateTexture(_numsides - 4);
 				removeNode();
 				Spin();
 			}
