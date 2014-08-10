@@ -11,8 +11,15 @@ public class FreeNutrient : Critter {
 	// ugly hack for setting color after animator initialized
 	private bool firstUpdate = true;
 
+	// change direction
+	public int movementSign = 1;
+
 	protected virtual void Awake() {
 		this.animatorObj = this.GetComponent<NutrientAnimator>();
+	}
+
+	public NutrientColor Color {
+		get { return animatorObj.Color; }
 	}
 
 	public override void DoStart() {
@@ -25,18 +32,26 @@ public class FreeNutrient : Critter {
 
 		if (firstUpdate) {
 			Array values = Enum.GetValues(typeof(NutrientColor));
-			animatorObj.Color = (NutrientColor)values.GetValue(UnityEngine.Random.Range(0, values.Length));
+			int possibleColors = Math.Min (values.Length, World.Instance.player.polygon.numsides);
+			animatorObj.Color = (NutrientColor)values.GetValue(UnityEngine.Random.Range(0, possibleColors));
 
 			firstUpdate = false;
 		}
 
 		Vector3 positionOfPlayer = World.Instance.player.transform.position;
-		Vector3 dirPlayerToMe = this.transform.position - positionOfPlayer;
-		dirPlayerToMe.Normalize();
+		if (this.movementSign == 1) {
+			Vector3 dirPlayerToMe = this.transform.position - positionOfPlayer;
+			dirPlayerToMe.Normalize();
 
-		//Debug.Log("time " + this.timelineEntry.PercentBetweenSpawnAndHit(this.timeline));
-		this.transform.position = positionOfPlayer +
-			(dirPlayerToMe * (Player.PLAYER_RADIUS + timelineEntry.PercentBetweenSpawnAndHit(this.timeline) * timelineEntry.spawnDistance));
+			//Debug.Log("time " + this.timelineEntry.PercentBetweenSpawnAndHit(this.timeline));
+			this.transform.position = positionOfPlayer +
+				(dirPlayerToMe * (Player.PLAYER_RADIUS + timelineEntry.PercentBetweenSpawnAndHit(this.timeline) * timelineEntry.spawnDistance));
+		} else {
+			//Move the enemy toward the center. This should maybe go faster as the enemy gets closer?
+			Vector3 directionToPlayer = -(this.transform.position - positionOfPlayer);
+			directionToPlayer.Normalize();
+			this.transform.position += Time.deltaTime * (directionToPlayer * this.timelineEntry.speed) * movementSign;
+		}
 
 		//base.HitThePlayer();
 		//World.Instance.player.AddNutrient();

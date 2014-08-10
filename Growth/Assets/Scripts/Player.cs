@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 
 public class Player : MonoBehaviour {
 
@@ -18,6 +20,8 @@ public class Player : MonoBehaviour {
 	public PolygonMaker polygon;
 	public GameObject bulletContainer;
 	public CapturedNutrient nutrientPrefab;
+
+	public List<NutrientColor> SideColors;
 
 	public float rotationSpeed { get; set; }
 	public int numberOfCapturedNutrients { get; set; }
@@ -124,16 +128,23 @@ public class Player : MonoBehaviour {
 		if (!this.canFire) {
 			return;
 		}
+
 		Vector3[] vertices = this.polygon.vertices;
+		Array colorVals = Enum.GetValues(typeof(NutrientColor));
+		this.SideColors.Clear();
+		for (int i = 0; i < vertices.Length; i++) {
+			this.SideColors.Add((NutrientColor)colorVals.GetValue(i % colorVals.Length));
+		}
+
 		//int missingIndex = Random.Range(0, vertices.Length - 1);
 		for (int i = 0; i < vertices.Length; i++) {
 			int i1 = i == 0 ? vertices.Length - 1 : i - 1;
 			int i2 = i;
-			this.CreateBullet(vertices, i1, i2);
+			this.CreateBullet(vertices, i1, i2, this.SideColors[i]);
 		}
 	}
 
-	private void CreateBullet(Vector3[] vertices, int i1, int i2) {
+	private Bullet CreateBullet(Vector3[] vertices, int i1, int i2, NutrientColor color) {
 		Vector3 v1 = this.polygon.transform.TransformPoint(vertices[i1]);
 		Vector3 v2 = this.polygon.transform.TransformPoint(vertices[i2]);
 		Vector3 vCenter = (v1 + v2) / 2;
@@ -153,7 +164,13 @@ public class Player : MonoBehaviour {
 		/* lr.useWorldSpace = false;
 		lr.SetPosition(0, v1 - vCenter);
 		lr.SetPosition(1, v2 - vCenter); */
+		lr.material = new Material(Shader.Find ("Mobile/Particles/Additive"));
 		lr.SetWidth(LINE_WIDTH, LINE_WIDTH);
+		lr.castShadows = false;
+		lr.receiveShadows = false;
+
+		bullet.lineRenderer = lr;
+		bullet.Color = color;
 
 		GameObject colliderObj = new GameObject();
 		colliderObj.name = "Collider";
@@ -170,6 +187,8 @@ public class Player : MonoBehaviour {
 		bc.transform.Rotate(new Vector3(0, 0, 1), (v1 - v2).ToVector2().AngleFromUnitX());
 		bc.isTrigger = true;
 		bullet.bulletCollider = bc;
+
+		return bullet;
 	}
 
 	public void AddNutrient() {
@@ -185,7 +204,7 @@ public class Player : MonoBehaviour {
 				radius * Mathf.Cos(angleOfNewNutInRadians),
 				radius * Mathf.Sin(angleOfNewNutInRadians));
 
-			CapturedNutrient nut = Object.Instantiate(this.nutrientPrefab) as CapturedNutrient;
+			CapturedNutrient nut = GameObject.Instantiate(this.nutrientPrefab) as CapturedNutrient;
 			nut.transform.parent = nutrientParent.transform;
 			nut.transform.localPosition = targetPosition;
 			nut.transform.localRotation = Quaternion.AngleAxis(0, Vector3.forward);
@@ -198,7 +217,7 @@ public class Player : MonoBehaviour {
 
 			//First delete all the nutrients.
 			foreach (CapturedNutrient nut in this.nutrientList) {
-				Object.Destroy(nut.gameObject);
+				GameObject.Destroy(nut.gameObject);
 			}
 
 			this.nutrientList.Clear();

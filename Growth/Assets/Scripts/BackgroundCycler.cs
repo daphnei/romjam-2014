@@ -28,7 +28,14 @@ public class BackgroundCycler : Pulser {
 
 		polygons = new MeshRenderer[NUM_POLYGONS];
 		GameObject parent = new GameObject("BG Polygons Parent");
-		parent.transform.parent = GameObject.Find("Player").transform;
+
+		//When I re-use this thing in the menus, player will not exist.
+		GameObject player = GameObject.Find("Player");
+		if (player != null)
+		{
+			parent.transform.parent = player.transform;
+		}
+	
 		for (int i = 0; i < NUM_POLYGONS; i++)
 		{
 			GameObject g = GameObject.Instantiate(bgPolygon) as GameObject;
@@ -49,7 +56,8 @@ public class BackgroundCycler : Pulser {
 
 		g.transform.position = new Vector3(0, 0, index + 10);
 		g.transform.localScale = new Vector2(randomScale * index, randomScale * index);
-		g.transform.rotation = World.Instance.player.transform.rotation;
+
+		//g.transform.rotation = World.Instance.player.transform.rotation;
 
 		polygons[index].material.color = (index%2 == 0) ? c1 : c2;
 	}

@@ -10,7 +10,18 @@ public class Bullet : MonoBehaviour {
 	public Vector2 centerPosition;
 	public BoxCollider2D bulletCollider;
 
-	private LineRenderer lineRenderer;
+	private NutrientColor color;
+	public NutrientColor Color {
+		get { return color; }
+		set {
+			color = value;
+//			this.lineRenderer.sharedMaterial.color = color.ColorValue();
+			this.lineRenderer.material.color = color.ColorValue();
+			this.lineRenderer.SetColors(color.ColorValue(), color.ColorValue());
+		}
+	}
+
+	public LineRenderer lineRenderer;
 
 	void Start() {
 		this.lineRenderer = this.GetComponent<LineRenderer>();
@@ -19,6 +30,7 @@ public class Bullet : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		this.transform.localPosition += (this.localVelocity * Time.deltaTime).ToVector3();
+//		Debug.Log (this.Color.ColorValue());
 
 		Vector3 viewportPoint = Camera.main.WorldToViewportPoint(this.transform.position);
 		if (viewportPoint.x < -EDGE_THRESHOLD || viewportPoint.x > 1 + EDGE_THRESHOLD ||
