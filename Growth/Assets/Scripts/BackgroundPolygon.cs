@@ -15,7 +15,7 @@ public class BackgroundPolygon : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		if ( Object.ReferenceEquals(thisMesh.mesh, playerPolygon.mesh) ) {
+		if ( !Object.ReferenceEquals(thisMesh.mesh, playerPolygon.mesh) ) {
 			thisMesh.mesh = playerPolygon.mesh;
 		}
 	}
