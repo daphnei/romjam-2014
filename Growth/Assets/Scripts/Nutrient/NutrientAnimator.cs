@@ -21,7 +21,7 @@ public class NutrientAnimator : Pulser {
 				this.core.renderer.material.color = color.ColorValue();
 
 			if (this.parts != null)
-				this.parts.renderer.material.color = color.ColorValue();
+				parts.startColor = color.ColorValue();
 		}
 	}
 	
@@ -30,7 +30,7 @@ public class NutrientAnimator : Pulser {
 
 	private float pulseCount;
 
-	public int NUMPARTICLES = 10;
+	public int NUMPARTICLES = 8;
 
 	private Transform ring, core;
 	private Light myLight;
@@ -49,7 +49,6 @@ public class NutrientAnimator : Pulser {
 		coreScaleIntitial = core.transform.localScale.x;
 
 		parts = this.GetComponent<ParticleSystem>();
-
 		pulseCount = pulseLength;
 	}
 
@@ -61,6 +60,7 @@ public class NutrientAnimator : Pulser {
 
 	// Update is called once per frame
 	void Update() {
+		/*
 		ParticleSystem.Particle[] ParticleList = new ParticleSystem.Particle[parts.particleCount];
 		parts.GetParticles(ParticleList);
 
@@ -70,7 +70,7 @@ public class NutrientAnimator : Pulser {
 		}
 
 		parts.SetParticles(ParticleList, parts.particleCount);
-
+		*/
 
 		float pulse = 1;
 		if (pulseCount < pulseLength) {
