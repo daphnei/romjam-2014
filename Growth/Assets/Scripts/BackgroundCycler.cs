@@ -1,84 +1,100 @@
 ﻿using UnityEngine;
 using System.Collections;
-using System.Collections.Generic;
 
 public class BackgroundCycler : Pulser {
-	const int NUM_LINES = 40;
-
+	
 	public float frequency = 0.1f;
-	public float lineDeviance = 20;
+	public float cycleMovementSpeed = 2f;
+	
+	public int redMax = 255;
+	public int greenMax = 255;
+	public int blueMax = 255;
+	
+	private float time;
+	private float nextTime;
 
-
-	public float minLineColorFraction = 0.6f;
-	public float maxLineColorFraction = 0.9f;
-
+	private const int NUM_POLYGONS = 20;
 	public GameObject bgPolygon;
-	
-	private List<GameObject> lines;
-	private float time = 0;
-	private float nextTime = 0;
-	
+	private MeshRenderer[] polygons;
+
 	// Use this for initialization
-	protected override void Start () {
-		base.Start();
-		
-		this.lines = new List<GameObject>();
+	void Start () {
+		PulseController.Instance.AddPulser(this);
+		time = Time.timeSinceLevelLoad;
+		nextTime = Time.timeSinceLevelLoad;
 
-		chooseBackgroundColor();
+		Color c1 = getColor();
+		Color c2 = c1 * .7f;
 
-//		float approxDistBetweenLines = Camera.main.pixelWidth / NUM_LINES;
-//		for (int i = 0; i < NUM_LINES; i++)
-//		{
+		polygons = new MeshRenderer[NUM_POLYGONS];
+		GameObject parent = new GameObject("BG Polygons Parent");
+		for (int i = 0; i < NUM_POLYGONS; i++)
+		{
 			GameObject g = GameObject.Instantiate(bgPolygon) as GameObject;
-			g.transform.position = new Vector3(0, 0);
+			g.transform.parent = parent.transform;
+
 			MeshRenderer mr = g.GetComponent<MeshRenderer>() as MeshRenderer;
-
-			mr.material.color = Color.red;
-//		}
+			polygons[i] = mr;
+			
+			randomizePolygon(i, c1, c2);
+		}
 	}
 
-	static Mesh clone(Mesh mesh)
+	private void randomizePolygon(int index, Color c1, Color c2)
 	{
-		Mesh newmesh = new Mesh();
-		newmesh.vertices = mesh.vertices;
-		newmesh.triangles = mesh.triangles;
-		newmesh.uv = mesh.uv;
-		newmesh.normals = mesh.normals;
-		newmesh.colors = mesh.colors;
-		newmesh.tangents = mesh.tangents;
-		return newmesh;
+		GameObject g = polygons[index].gameObject;
+
+		float randomScale = Random.Range(1.4f, 1.6f);
+
+		g.transform.position = new Vector3(0, 0, index + 10);
+		g.transform.localScale = new Vector2(randomScale * index, randomScale * index);
+		g.transform.rotation = World.Instance.player.transform.rotation;
+
+		polygons[index].material.color = (index%2 == 0) ? c1 : c2;
 	}
 
-		// Update is called once per frame
-	void Update () {
-		chooseBackgroundColor();
-
-		time = Mathf.MoveTowards(time, nextTime, 0.01f);
-	}
-
-	private void chooseBackgroundColor()
+	public override void Pulse ()
 	{
-		Camera.main.backgroundColor = Camera.main.backgroundColor = new Color(
-			Mathf.Sin(frequency*time) * 0.5f + 0.5f,
-			Mathf.Sin(frequency*time + 2) * 0.5f + 0.5f,
-			Mathf.Sin(frequency*time + 4) * 0.5f + 0.5f
-			);
+		base.Pulse();
+		
+		nextTime = Time.timeSinceLevelLoad;
+
+		Color c1 = getColor();
+		Color c2 = c1 * .7f;
+
+		for (int i = 0; i < NUM_POLYGONS; i++)
+		{
+			randomizePolygon(i, c1, c2);
+		}
 	}
 	
-	public override void Pulse() {
-//		float approxDistBetweenLines = Camera.main.pixelWidth / NUM_LINES;
-//		
-//		for (int i = 0; i < NUM_LINES; i++)
-//		{
-//			LineRenderer lr = lines[i].GetComponent<LineRenderer>() as LineRenderer;
-//
-//			//Choose a new random position
-//			float approxXPos = (approxDistBetweenLines * i) + (approxDistBetweenLines/2);
-//			updateLinePos(lr, approxXPos);
-//			
-//			//choose a new random color that is not too far off from the background color.
-//			float fract = Random.Range(minLineColorFraction, maxLineColorFraction);
-//			lr.material.color = Camera.main.backgroundColor * fract;
-//		}
+	// Update is called once per frame
+	void Update () {
+		time = Mathf.MoveTowards(time, nextTime, cycleMovementSpeed);
+		
+
+		for (int i = 0; i < NUM_POLYGONS; i++)
+		{
+			GameObject g = polygons[i].gameObject;
+
+			Vector3 s = g.transform.localScale;
+			if (s.x >= 0.1f && s.y >= 0.1f)
+			{
+				s.x -= 0.1f;
+				s.y -= 0.1f;
+				g.transform.localScale = s;
+			}
+
+		}
 	}
+
+	private Color getColor()
+	{
+		return new Color(
+					Mathf.Min(redMax / 255f, Mathf.Sin(frequency*time) * 0.5f + 0.5f),
+					Mathf.Min(greenMax / 255f, Mathf.Sin(frequency*time + 2) * 0.5f + 0.5f),
+					Mathf.Min(blueMax / 255f, Mathf.Sin(frequency*time + 4) * 0.5f + 0.5f)
+					);
+	}
+
 }
