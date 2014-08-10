@@ -4,7 +4,7 @@ using System.Collections;
 
 public class FreeNutrient : Critter {
 
-	NutrientAnimator animatorObj;
+	public NutrientAnimator animatorObj;
 	public Timeline timeline;
 	public TimelineEntry timelineEntry;
 
@@ -17,6 +17,8 @@ public class FreeNutrient : Critter {
 	protected virtual void Awake() {
 		this.animatorObj = this.GetComponent<NutrientAnimator>();
 	}
+
+	public NutrientColor soonColor;
 
 	public NutrientColor Color {
 		get { return animatorObj.Color; }
@@ -31,7 +33,7 @@ public class FreeNutrient : Critter {
 		base.DoUpdate();
 
 		if (firstUpdate) {
-			animatorObj.Color = randomColor();
+			this.animatorObj.Color = soonColor;
 
 			firstUpdate = false;
 		}
@@ -63,12 +65,7 @@ public class FreeNutrient : Critter {
 		this.animatorObj.Pulse();
 	}
 
-	public static NutrientColor randomColor()
-	{
-		Array values = Enum.GetValues(typeof(NutrientColor));
-		int possibleColors = Mathf.Min(values.Length, World.Instance.player.polygon.numsides);
-		NutrientColor color = (NutrientColor)values.GetValue(UnityEngine.Random.Range(0, possibleColors));
-
-		return color;
+	protected override void ChooseSpawnPoint() {
+		
 	}
 }

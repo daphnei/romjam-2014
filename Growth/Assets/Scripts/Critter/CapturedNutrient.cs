@@ -19,7 +19,7 @@ public class CapturedNutrient : Pulser {
 			
 			firstUpdate = false;
 		}
-	}
+	} 
 
 	override public void Pulse() {
 		//See how it looks without pulsing.

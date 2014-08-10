@@ -263,7 +263,7 @@ public class Player : MonoBehaviour {
 			this.polygon.removeNode();
 
 			for (int i = 0; i < this.polygon.numsides; i++) {
-				this.AddNutrient(FreeNutrient.randomColor());
+				this.AddNutrient(EnemyGenerator.randomColor());
 			}
 
 		} else if (this.nutrientList.Count > 0) {
