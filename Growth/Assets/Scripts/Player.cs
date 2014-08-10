@@ -39,6 +39,7 @@ public class Player : MonoBehaviour {
 	private int lastPlayerRotationDir = 1; //either 1 or -1
 
 	private bool canFire = true;
+	private bool pulseOut = false;
 
 	/**
 	 * Showa take damage animation for this many frames;
@@ -65,6 +66,15 @@ public class Player : MonoBehaviour {
 
 	// Update is called once per frame
 	void Update() {
+		if (this.pulseOut) {
+			this.transform.localScale = Vector3.MoveTowards(this.transform.localScale, new Vector3(1.3f, 1.3f, 1.3f), 0.1f);
+			if (this.transform.localScale == new Vector3(1.3f, 1.3f, 1.3f)) {
+				this.pulseOut = false;
+			}
+		} else if (this.transform.localScale != Vector3.one) {
+			this.transform.localScale = Vector3.MoveTowards(transform.localScale, Vector3.one, 0.02f);
+		}
+
 		float realDeltaTime = Time.realtimeSinceStartup - this.prevRealTime;
 
 		/*if (this.bulletContainer.transform.childCount == 0) {
@@ -258,6 +268,8 @@ public class Player : MonoBehaviour {
 
 		//Add to the score
 		World.Instance.score.Increment(1);
+
+		this.pulseOut = true;
 	}
 
 	public void RemoveNutrient() {
