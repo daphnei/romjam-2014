@@ -46,6 +46,9 @@ public class BackgroundCycler : Pulser {
 			
 			randomizePolygon(i, c1, c2);
 		}
+
+		this.camera.main.backgroundColor = c2;
+
 	}
 
 	private void randomizePolygon(int index, Color c1, Color c2)
@@ -75,6 +78,8 @@ public class BackgroundCycler : Pulser {
 		{
 			randomizePolygon(i, c1, c2);
 		}
+
+		this.camera.main.backgroundColor = c2;
 	}
 	
 	// Update is called once per frame
