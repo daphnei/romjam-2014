@@ -26,6 +26,8 @@ public class Player : MonoBehaviour {
 	public float rotationSpeed { get; set; }
 	public int numberOfCapturedNutrients { get; set; }
 
+	public Material bulletMaterial;
+
 	Vector3? prevMousePosition;
 	float touchTime = 0;
 	float averageRotateSpeed;
@@ -164,7 +166,7 @@ public class Player : MonoBehaviour {
 		/* lr.useWorldSpace = false;
 		lr.SetPosition(0, v1 - vCenter);
 		lr.SetPosition(1, v2 - vCenter); */
-		lr.material = new Material(Shader.Find ("Mobile/Particles/Alpha Blended"));
+		lr.material = bulletMaterial;
 		lr.SetWidth(LINE_WIDTH, LINE_WIDTH);
 		lr.castShadows = false;
 		lr.receiveShadows = false;
