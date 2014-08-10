@@ -47,7 +47,7 @@ public class BackgroundCycler : Pulser {
 			randomizePolygon(i, c1, c2);
 		}
 
-		this.camera.main.backgroundColor = c2;
+		Camera.main.backgroundColor = c2;
 
 	}
 
