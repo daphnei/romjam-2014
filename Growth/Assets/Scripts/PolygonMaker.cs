@@ -27,7 +27,8 @@ public class PolygonMaker : MonoBehaviour {
 	}
 
 	private float spinCount = 0f;
-	private float spinTime = 1f;
+	static float spinTime = 1f;
+	static float numRotations = 8f;
 
 	public event Action NumberOfSidesChanged;
 	public event Action NumberOfSidesTransitionStart;
@@ -179,7 +180,7 @@ public class PolygonMaker : MonoBehaviour {
 
 
 		if (spinCount < spinTime) {
-			updateTextureUVs(3600 * Easing.easeSinInv(spinCount / spinTime));
+			updateTextureUVs(360 * numRotations * Easing.easeSinInv(spinCount / spinTime));
 			spinCount += Time.deltaTime;
 		}
 		else {
