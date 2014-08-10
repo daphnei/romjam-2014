@@ -33,7 +33,7 @@ public class Critter : Pulser {
 		Vector3 positionOfPlayer = World.Instance.player.transform.position;
 
 		if (this.transform.localScale != Vector3.one) {
-			this.transform.localScale = Vector3.MoveTowards(this.transform.localScale, this.initialScale, 0.02f);
+			this.transform.localScale = Vector3.MoveTowards(this.transform.localScale, this.initialScale, 0.01f);
 //			Debug.Log (this.transform.localScale);
 		}
 	}
@@ -80,6 +80,6 @@ public class Critter : Pulser {
 	public override void Pulse()
 	{
 		base.Pulse();
-		this.transform.localScale = this.initialScale * 2;
+		this.transform.localScale = this.initialScale * 1.5f;
 	}
 }
