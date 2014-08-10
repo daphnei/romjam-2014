@@ -13,8 +13,12 @@ public class NutrientAnimator : Pulser {
 		get { return color; }
 		set {
 			color = value;
-			this.ring.renderer.material.color = color.ColorValue();
-			this.core.renderer.material.color = color.ColorValue();
+
+			if (this.ring != null)
+				this.ring.renderer.material.color = color.ColorValue();
+
+			if (this.core != null)
+				this.core.renderer.material.color = color.ColorValue();
 		}
 	}
 	
