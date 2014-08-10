@@ -22,6 +22,9 @@ public class PolygonMaker : MonoBehaviour {
 		}
 	}
 
+	private float spinCount = 0f;
+	private float spinTime = 1f;
+
 	private bool transitioning = false;
 	private bool growing = true;
 	private float transElapsed = 0f;
@@ -82,6 +85,10 @@ public class PolygonMaker : MonoBehaviour {
 		}
 	}
 
+	public void Spin() {
+		this.spinCount = 0f;
+	}
+
 	void updateTransitionalMesh(float firstAngle, float offsetAngle, Mesh m) {
 		int ns = m.vertices.Length;
 		Vector3[] verts = new Vector3[ns];
@@ -103,14 +110,14 @@ public class PolygonMaker : MonoBehaviour {
 		return new Vector2(0.5f + v.x / 2, 0.5f + v.y / 2);
 	}
 
-	void updateTextureUVs() {
+	void updateTextureUVs(float angleOffset) {
 		Mesh m = this.filter.mesh;
 		Vector3[] verts = m.vertices;
 		Vector2[] uv = new Vector2[verts.Length];
 		for (int i = 0; i < verts.Length; i++) {
 			uv[i] = v2uv(
-				Quaternion.AngleAxis( 
-				(this.transform.eulerAngles.z),
+				Quaternion.AngleAxis(
+				(this.transform.eulerAngles.z - angleOffset),
 				Vector3.forward) * new Vector3(verts[i].x, verts[i].y, 0));
 		}
 		m.uv = uv;
@@ -121,14 +128,14 @@ public class PolygonMaker : MonoBehaviour {
 	void Update () {
 		transElapsed += Time.deltaTime;
 
-		updateTextureUVs();
-
 		if (!transitioning) {
 			if (Input.GetKey(KeyCode.S)) {
 				addNode();
+				Spin();
 			}
 			if (Input.GetKey(KeyCode.A)) {
 				removeNode();
+				Spin();
 			}
 		}
 		else if (transElapsed < transtime){
@@ -155,6 +162,15 @@ public class PolygonMaker : MonoBehaviour {
 				numsides = numsides - 1;
 			}
 			//Debug.Log(numsides);
+		}
+
+
+		if (spinCount < spinTime) {
+			updateTextureUVs(3600 * Easing.easeSinInv(spinCount / spinTime));
+			spinCount += Time.deltaTime;
+		}
+		else {
+			updateTextureUVs(0);
 		}
 	}
 }
