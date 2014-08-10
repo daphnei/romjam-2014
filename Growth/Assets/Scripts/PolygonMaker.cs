@@ -28,7 +28,7 @@ public class PolygonMaker : MonoBehaviour {
 
 	private float spinCount = 0f;
 	static float spinTime = 1f;
-	static float numRotations = 8f;
+	static float numRotations = 3f;
 
 	public event Action NumberOfSidesChanged;
 	public event Action NumberOfSidesTransitionStart;
@@ -36,13 +36,13 @@ public class PolygonMaker : MonoBehaviour {
 	private bool transitioning = false;
 	private bool growing = true;
 	private float transElapsed = 0f;
-	static float transtime = 0.5f;
+	static float transtime = 0.2f;
 
 	// Use this for initialization
 	void Awake() {
 		filter = this.gameObject.GetComponent<MeshFilter>();
 		ccollider = this.gameObject.GetComponent<CircleCollider2D>();
-		this.numsides = 7;
+		this.numsides = 4;
 		ImageManager.loadMaterials();
 		this.renderer.materials = ImageManager.updateTexture(_numsides-3);
 		this.ccollider.radius = (float)Math.Cos(Mathf.Deg2Rad * (360 / numsides));
