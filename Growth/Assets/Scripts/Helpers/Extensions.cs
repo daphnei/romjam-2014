@@ -20,6 +20,8 @@ public static class Extensions {
 			return new Color(244f / 255f, 28f / 255f, 84f / 255f);
 		case NutrientColor.Green:
 			return new Color(110f / 255f, 232f / 255f, 12f / 255f);
+		case NutrientColor.White:
+			return new Color(241f / 255f, 237f / 255f, 226f / 255f);
 		default:
 			return new Color();
 		}
