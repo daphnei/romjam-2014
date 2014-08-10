@@ -5,7 +5,7 @@ public class MenusTitle : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-	
+		this.GetComponent<GUIText>().fontSize = 64;
 	}
 	
 	// Update is called once per frame
