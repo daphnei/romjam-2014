@@ -7,6 +7,16 @@ public class NutrientAnimator : Pulser {
 	public float pulseLength = 0.1f;
 	public float pulseScale = 0.5f;
 	public float jitterweight = 0.2f;
+
+	private NutrientColor color;
+	public NutrientColor Color {
+		get { return color; }
+		set {
+			color = value;
+			this.ring.renderer.material.color = color.ColorValue();
+			this.core.renderer.material.color = color.ColorValue();
+		}
+	}
 	
 	private float ringScaleInitial;
 	private float coreScaleIntitial;
@@ -18,7 +28,7 @@ public class NutrientAnimator : Pulser {
 	private ParticleSystem parts;
 
 	// Use this for initialization
-	protected override void  Start() {
+	protected override void Start() {
 		base.Start();
 		core = this.transform.FindChild("core");
 		ring = this.transform.FindChild("ring");

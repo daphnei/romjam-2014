@@ -4,7 +4,7 @@ using System;
 
 public class PolygonMaker : MonoBehaviour {
 
-	private PolygonCollider2D pcollider;
+	private CircleCollider2D ccollider;
 
 	//I know this hsouldn't be public with a getter setter, but I cannot too lazy to figure out the syntax.
 	public MeshFilter filter;
@@ -18,13 +18,17 @@ public class PolygonMaker : MonoBehaviour {
 			if (value >= 3 && value !=this._numsides) {
 				this._numsides = value;
 				this.filter.mesh = makeMesh(this._numsides);
-				this.pcollider.CreatePrimitive(this._numsides, new Vector2(1, 1), new Vector2(0, 0));
+				this.ccollider.radius = (float) Math.Cos(Mathf.Deg2Rad * (360 / numsides /2));
 				if (this.NumberOfSidesChanged != null) {
 					this.NumberOfSidesChanged();
 				}
 			}
 		}
 	}
+
+	private float spinCount = 0f;
+	static float spinTime = 1f;
+	static float numRotations = 8f;
 
 	public event Action NumberOfSidesChanged;
 	public event Action NumberOfSidesTransitionStart;
@@ -37,9 +41,9 @@ public class PolygonMaker : MonoBehaviour {
 	// Use this for initialization
 	void Awake() {
 		filter = this.gameObject.GetComponent<MeshFilter>();
-		pcollider = this.gameObject.GetComponent<PolygonCollider2D>();
+		ccollider = this.gameObject.GetComponent<CircleCollider2D>();
 		this.filter.mesh = makeMesh(7);
-		this.pcollider.CreatePrimitive(this._numsides, new Vector2(1, 1), new Vector2(0, 0));
+		this.ccollider.radius = (float)Math.Cos(Mathf.Deg2Rad * (360 / numsides));
 	}
 
 
@@ -52,7 +56,7 @@ public class PolygonMaker : MonoBehaviour {
 		for (int i = 0; i < numsides; i++) {
 			verts[i] = Quaternion.AngleAxis(360f / numsides * -i, Vector3.forward) * Vector3.up;
 
-			uv[i] = new Vector2(0.5f+verts[i].x/2, 0.5f+verts[i].y/2);
+			uv[i] = v2uv(verts[i]);
 
 			tris[3 * i] = 0;
 			tris[3 * i + 1] = i;
@@ -95,6 +99,10 @@ public class PolygonMaker : MonoBehaviour {
 		}
 	}
 
+	public void Spin() {
+		this.spinCount = 0f;
+	}
+
 	void updateTransitionalMesh(float firstAngle, float offsetAngle, Mesh m) {
 		int ns = m.vertices.Length;
 		Vector3[] verts = new Vector3[ns];
@@ -105,11 +113,29 @@ public class PolygonMaker : MonoBehaviour {
 			verts[i] = Quaternion.AngleAxis(-firstAngle + offsetAngle - angstep * (i - 1), Vector3.forward) * Vector3.up;
 		}
 		for (int i = 0; i < ns; i++) {
-			uv[i] = new Vector2(0.5f + verts[i].x / 2, 0.5f + verts[i].y / 2);
+			uv[i] = v2uv(verts[i]);
 		}
 		
 		m.vertices = verts;
 		m.uv = uv;
+	}
+
+	static Vector2 v2uv(Vector3 v) {
+		return new Vector2(0.5f + v.x / 2, 0.5f + v.y / 2);
+	}
+
+	void updateTextureUVs(float angleOffset) {
+		Mesh m = this.filter.mesh;
+		Vector3[] verts = m.vertices;
+		Vector2[] uv = new Vector2[verts.Length];
+		for (int i = 0; i < verts.Length; i++) {
+			uv[i] = v2uv(
+				Quaternion.AngleAxis(
+				(this.transform.eulerAngles.z - angleOffset),
+				Vector3.forward) * new Vector3(verts[i].x, verts[i].y, 0));
+		}
+		m.uv = uv;
+		this.filter.mesh = m;
 	}
 
 	// Update is called once per frame
@@ -118,10 +144,14 @@ public class PolygonMaker : MonoBehaviour {
 
 		if (!transitioning) {
 			if (Input.GetKey(KeyCode.S)) {
+				this.GetComponent<ImageManager>().updateTexture(_numsides - 2);
 				addNode();
+				Spin();
 			}
 			if (Input.GetKey(KeyCode.A)) {
+				this.GetComponent<ImageManager>().updateTexture(_numsides - 4);
 				removeNode();
+				Spin();
 			}
 		}
 		else if (transElapsed < transtime){
@@ -148,6 +178,15 @@ public class PolygonMaker : MonoBehaviour {
 				numsides = numsides - 1;
 			}
 			//Debug.Log(numsides);
+		}
+
+
+		if (spinCount < spinTime) {
+			updateTextureUVs(360 * numRotations * Easing.easeSinInv(spinCount / spinTime));
+			spinCount += Time.deltaTime;
+		}
+		else {
+			updateTextureUVs(0);
 		}
 	}
 }
