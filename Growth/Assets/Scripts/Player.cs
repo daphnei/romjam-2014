@@ -163,7 +163,10 @@ public class Player : MonoBehaviour {
 		/* lr.useWorldSpace = false;
 		lr.SetPosition(0, v1 - vCenter);
 		lr.SetPosition(1, v2 - vCenter); */
+		lr.material = new Material(Shader.Find ("Mobile/Particles/Additive"));
 		lr.SetWidth(LINE_WIDTH, LINE_WIDTH);
+		lr.castShadows = false;
+		lr.receiveShadows = false;
 
 		bullet.lineRenderer = lr;
 		bullet.Color = color;
