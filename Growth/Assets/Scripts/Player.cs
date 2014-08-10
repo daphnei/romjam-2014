@@ -216,6 +216,9 @@ public class Player : MonoBehaviour {
 			nut.GetComponent<NutrientAnimator>().Color = color;
 
 			this.nutrientList.Add(nut);
+
+			this.particleSystem.startColor = color.ColorValue();
+			this.particleSystem.Emit(20);
 		}
 
 		//Reached the max number of nutrients for this polygom. Time to grow an extra side!
