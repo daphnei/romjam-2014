@@ -238,6 +238,9 @@ public class Player : MonoBehaviour {
 			nut.GetComponent<NutrientAnimator>().nutColor = color;
 
 			this.nutrientList.Add(nut);
+
+			this.particleSystem.startColor = color.ColorValue();
+			this.particleSystem.Emit(20);
 		}
 
 		//Reached the max number of nutrients for this polygom. Time to grow an extra side!
@@ -263,7 +266,7 @@ public class Player : MonoBehaviour {
 			this.polygon.removeNode();
 
 			for (int i = 0; i < this.polygon.numsides; i++) {
-				this.AddNutrient(FreeNutrient.randomColor());
+				this.AddNutrient(EnemyGenerator.randomColor());
 			}
 
 		} else if (this.nutrientList.Count > 0) {

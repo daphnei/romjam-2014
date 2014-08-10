@@ -2,6 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System;
 
 public class Timeline {
 
@@ -32,14 +33,63 @@ public class Timeline {
 	public static Timeline GenerateTimeline(int lineLength, float timeStep) {
 		Timeline timeline = new Timeline();
 		TimelineEntry[] entries = new TimelineEntry[lineLength];
-		for (int i = 0; i < entries.Length; i++) {
-			if (Random.Range(0, 9) == 0) {
-				continue;
-			}
+		int i = 0;
+		while (i < entries.Length) {
+
 			TimelineEntry entry = entries[i] = new TimelineEntry();
 			entry.hitTime = i * timeStep;
-			entry.speed = 0.3f + i * 0.08f;
-			entry.spawnDistance = 5f;
+			entry.speed = 5f;
+			entry.spawnDistance = 6f;
+			entry.angle = new Vector2(0, 1); //Random.insideUnitCircle.normalized;
+
+			switch (UnityEngine.Random.Range(0, 5)) {
+				case 0:
+					entry.angle = new Vector2(0, 1);
+					i++;
+					break;
+				case 1:
+					entry.angle = new Vector2(0, -1);
+					i++;
+					break;
+				case 2:
+					entry.angle = new Vector2(1, 1);
+					i++;
+					if (i >= entries.Length) {
+						break;
+					}
+					entry = entries[i] = new TimelineEntry();
+					entry.hitTime = i * timeStep;
+					entry.speed = 5f;
+					entry.spawnDistance = 6f;
+					entry.angle = new Vector2(1, 1);
+					entry.colorSame = true;
+					break;
+				case 3:
+					entry.angle = new Vector2(-1, 1);
+					i++;
+					if (i >= entries.Length) {
+						break;
+					}
+					entry = entries[i] = new TimelineEntry();
+					entry.hitTime = i * timeStep;
+					entry.speed = 5f;
+					entry.spawnDistance = 6f;
+					entry.angle = new Vector2(-1, 1);
+					entry.colorSame = true;
+					break;
+				case 4:
+					entry.angle = new Vector2(1, 0);
+					entry.speed *= 0.5f;
+					i++;
+					break;
+				case 5:
+					entry.angle = new Vector2(-1, 0);
+					entry.speed *= 0.5f;
+					i++;
+					break;
+			}
+
+			i += 2;
 		}
 		timeline.entries = entries.Where(e => e != null).OrderBy<TimelineEntry, float>(e => e.spawnTime).ToList<TimelineEntry>();
 		return timeline;
@@ -50,7 +100,9 @@ public class TimelineEntry {
 	public float hitTime;
 	public float speed;
 	public float spawnDistance;
+	public Vector2 angle;
 	public float spawnTime { get { return hitTime - spawnDistance / speed; } }
+	public bool colorSame = false;
 
 	public float PercentBetweenSpawnAndHit(Timeline t) {
 		return (this.hitTime - t.timelimePosition) / (this.hitTime - this.spawnTime);
@@ -67,7 +119,7 @@ public class EnemyGenerator : MonoBehaviour {
 	public GameObject[] enemies;
 	public Timeline timeline;
 
-	public float timestep = 1f;
+	float timestep = 0.6f;
 	public int timelength = 100;
 
 	// Use this for initialization
@@ -86,6 +138,8 @@ public class EnemyGenerator : MonoBehaviour {
 		}
 	}
 
+	NutrientColor lastColor = NutrientColor.Purple;
+
 	void SpawnEnemy(TimelineEntry entry)
 	{
 		if (Camera.main == null)
@@ -93,13 +147,27 @@ public class EnemyGenerator : MonoBehaviour {
 			throw new UnityException("This should not happen YOLOSWAG");
 		}
 
-		int enemyIndex = Random.Range(0, enemies.Length);
+		int enemyIndex = UnityEngine.Random.Range(0, enemies.Length);
 		GameObject obj = Instantiate(enemies[enemyIndex]) as GameObject;
-		Vector2 dir = Random.insideUnitCircle.normalized;
-		Debug.Log(dir.magnitude.ToString());
+		Vector2 dir = entry.angle.normalized; //Random.insideUnitCircle.normalized;
+		//Debug.Log(dir.magnitude.ToString());
 		obj.transform.position = World.Instance.player.transform.position.ToVector2() + dir * (entry.spawnDistance + 1.2f);// 1.2 is circle size?
 		obj.GetComponent<FreeNutrient>().timeline = this.timeline;
 		obj.GetComponent<FreeNutrient>().timelineEntry = entry;
+		if (entry.colorSame)
+			obj.GetComponent<FreeNutrient>().soonColor = lastColor;
+		else {
+			lastColor = obj.GetComponent<FreeNutrient>().soonColor = randomColor();
+		}
+	}
+
+	public static NutrientColor randomColor() {
+		Array values = Enum.GetValues(typeof(NutrientColor));
+		int possibleColors = Mathf.Min(values.Length, World.Instance.player.polygon.numsides);
+		NutrientColor color = (NutrientColor)values.GetValue(UnityEngine.Random.Range(0, possibleColors));
+		Debug.Log(color.ToString());
+		
+		return color;
 	}
 
 	void OnGUI() {
