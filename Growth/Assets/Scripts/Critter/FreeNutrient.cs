@@ -24,6 +24,10 @@ public class FreeNutrient : Critter {
 
 	public override void DoStart() {
 		base.DoStart();
+
+		Vector3 v = this.transform.position;
+		v.z = - 10;
+		this.transform.position = v;
 	}
 
 	// Update is called once per frame
