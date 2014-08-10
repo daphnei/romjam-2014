@@ -40,6 +40,12 @@ public class Player : MonoBehaviour {
 
 	private bool canFire = true;
 
+	/**
+	 * Showa take damage animation for this many frames;
+	 * */
+	private int takeDamage = 0;
+	public int numFramesToDoDamageVibrateFor = 15;
+
 	// Use this for initialization
 	void Awake() {
 		World.Instance.Register(this);
@@ -96,6 +102,22 @@ public class Player : MonoBehaviour {
 				this.averageRotateSpeed = 0;
 				this.touchTime = 0;
 			}
+		}
+
+		if (this.takeDamage > 0)
+		{
+			Vector2 newPosition;
+			if (this.takeDamage == 1)
+			{
+				newPosition = Vector2.zero;
+			}
+			else
+			{
+				newPosition = new Vector2(UnityEngine.Random.Range(-.1f, .1f), UnityEngine.Random.Range(-.1f, .1f));
+			}
+
+			this.transform.position = newPosition;
+			this.takeDamage--;
 		}
 
 		//		Time.timeScale = Mathf.Clamp(Mathf.Abs(this.rotationSpeed) / 80f, 0.2f, 3f);
@@ -241,9 +263,12 @@ public class Player : MonoBehaviour {
 			for (int i = 0; i < this.polygon.numsides; i++) {
 				this.AddNutrient(FreeNutrient.randomColor());
 			}
+
 		} else if (this.nutrientList.Count > 0) {
 			CapturedNutrient n = this.nutrientList.Pop();
 			GameObject.Destroy(n.gameObject);
+
+			this.takeDamage = numFramesToDoDamageVibrateFor;
 		}
 	}
 }
