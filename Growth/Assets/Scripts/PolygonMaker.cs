@@ -42,7 +42,7 @@ public class PolygonMaker : MonoBehaviour {
 	void Awake() {
 		filter = this.gameObject.GetComponent<MeshFilter>();
 		ccollider = this.gameObject.GetComponent<CircleCollider2D>();
-		this.numsides = 7;
+		this.numsides = 4;
 		ImageManager.loadMaterials();
 		this.renderer.materials = ImageManager.updateTexture(_numsides-3);
 		this.ccollider.radius = (float)Math.Cos(Mathf.Deg2Rad * (360 / numsides));

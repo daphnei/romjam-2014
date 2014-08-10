@@ -27,12 +27,16 @@ public class NutrientAnimator : Pulser {
 
 	private float pulseCount;
 
+	public int NUMPARTICLES = 10;
+
 	private Transform ring, core;
 	private Light myLight;
 	private ParticleSystem parts;
 
 	// Use this for initialization
 	protected override void Start() {
+		PulseController.Instance.AddPulser(this);
+		Debug.Log(":D");
 		base.Start();
 		core = this.transform.FindChild("core");
 		ring = this.transform.FindChild("ring");
@@ -46,9 +50,9 @@ public class NutrientAnimator : Pulser {
 	}
 
 	override public void Pulse() {
-//		Debug.Log("!");
+		Debug.Log("!");
 		pulseCount = 0;
-		parts.Emit(20);
+		parts.Emit(NUMPARTICLES);
 	}
 
 	// Update is called once per frame

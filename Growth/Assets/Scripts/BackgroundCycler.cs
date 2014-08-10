@@ -29,6 +29,9 @@ public class BackgroundCycler : Pulser {
 		polygons = new MeshRenderer[NUM_POLYGONS];
 		GameObject parent = new GameObject("BG Polygons Parent");
 
+		parent.transform.position = new Vector3(0,0,10);
+		
+
 		//When I re-use this thing in the menus, player will not exist.
 		GameObject player = GameObject.Find("Player");
 		if (player != null)
@@ -43,7 +46,10 @@ public class BackgroundCycler : Pulser {
 
 			MeshRenderer mr = g.GetComponent<MeshRenderer>() as MeshRenderer;
 			polygons[i] = mr;
-			
+
+			polygons[i].sortingLayerName = "bkg";
+			polygons[i].sortingOrder = 0;
+
 			randomizePolygon(i, c1, c2);
 		}
 
@@ -105,9 +111,9 @@ public class BackgroundCycler : Pulser {
 	private Color getColor()
 	{
 		return new Color(
-					Mathf.Min(redMax / 255f, Mathf.Sin(frequency*time) * 0.5f + 0.5f),
-					Mathf.Min(greenMax / 255f, Mathf.Sin(frequency*time + 2) * 0.5f + 0.5f),
-					Mathf.Min(blueMax / 255f, Mathf.Sin(frequency*time + 4) * 0.5f + 0.5f)
+					Mathf.Min(redMax / 255f, Mathf.Sin(frequency*time) * 0.5f + 0.3f),
+					Mathf.Min(greenMax / 255f, Mathf.Sin(frequency*time + 2) * 0.1f + 0.3f),
+					Mathf.Min(blueMax / 255f, Mathf.Sin(frequency*time + 4) * 0.1f + 0.3f)
 					);
 	}
 
