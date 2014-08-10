@@ -42,7 +42,9 @@ public class PolygonMaker : MonoBehaviour {
 	void Awake() {
 		filter = this.gameObject.GetComponent<MeshFilter>();
 		ccollider = this.gameObject.GetComponent<CircleCollider2D>();
-		this.filter.mesh = makeMesh(7);
+		this.numsides = 7;
+		ImageManager.loadMaterials();
+		this.renderer.materials = ImageManager.updateTexture(_numsides-3);
 		this.ccollider.radius = (float)Math.Cos(Mathf.Deg2Rad * (360 / numsides));
 	}
 
@@ -144,12 +146,12 @@ public class PolygonMaker : MonoBehaviour {
 
 		if (!transitioning) {
 			if (Input.GetKey(KeyCode.S)) {
-				this.GetComponent<ImageManager>().updateTexture(_numsides - 2);
+				this.renderer.materials = ImageManager.updateTexture(_numsides - 2);
 				addNode();
 				Spin();
 			}
 			if (Input.GetKey(KeyCode.A)) {
-				this.GetComponent<ImageManager>().updateTexture(_numsides - 4);
+				this.renderer.materials = ImageManager.updateTexture(_numsides - 4);
 				removeNode();
 				Spin();
 			}
