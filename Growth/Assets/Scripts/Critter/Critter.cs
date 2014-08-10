@@ -47,7 +47,7 @@ public class Critter : Pulser {
 	virtual protected void HitThePlayer()
 	{
 		Destroy(this.gameObject);
-	}                            
+	}                   
 
 	//Spawn on any of the edges of the screen.
 	virtual protected void ChooseSpawnPoint()
