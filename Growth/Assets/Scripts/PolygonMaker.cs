@@ -28,7 +28,7 @@ public class PolygonMaker : MonoBehaviour {
 
 	private float spinCount = 0f;
 	static float spinTime = 1f;
-	static float numRotations = 8f;
+	static float numRotations = 3f;
 
 	public event Action NumberOfSidesChanged;
 	public event Action NumberOfSidesTransitionStart;
@@ -36,7 +36,7 @@ public class PolygonMaker : MonoBehaviour {
 	private bool transitioning = false;
 	private bool growing = true;
 	private float transElapsed = 0f;
-	static float transtime = 0.5f;
+	static float transtime = 0.2f;
 
 	// Use this for initialization
 	void Awake() {

@@ -213,7 +213,7 @@ public class Player : MonoBehaviour {
 			nut.transform.parent = nutrientParent.transform;
 			nut.transform.localPosition = targetPosition;
 			nut.transform.localRotation = Quaternion.AngleAxis(0, Vector3.forward);
-			nut.GetComponent<NutrientAnimator>().Color = color;
+			nut.GetComponent<NutrientAnimator>().nutColor = color;
 
 			this.nutrientList.Add(nut);
 		}
