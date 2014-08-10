@@ -4,7 +4,7 @@ using System;
 
 public class PolygonMaker : MonoBehaviour {
 
-	private PolygonCollider2D pcollider;
+	private CircleCollider2D ccollider;
 
 	//I know this hsouldn't be public with a getter setter, but I cannot too lazy to figure out the syntax.
 	public MeshFilter filter;
@@ -18,7 +18,7 @@ public class PolygonMaker : MonoBehaviour {
 			if (value >= 3 && value !=this._numsides) {
 				this._numsides = value;
 				this.filter.mesh = makeMesh(this._numsides);
-				this.pcollider.CreatePrimitive(this._numsides, new Vector2(1, 1), new Vector2(0, 0));
+				this.ccollider.radius = (float) Math.Cos(Mathf.Deg2Rad * (360 / numsides /2));
 				if (this.NumberOfSidesChanged != null) {
 					this.NumberOfSidesChanged();
 				}
@@ -41,9 +41,9 @@ public class PolygonMaker : MonoBehaviour {
 	// Use this for initialization
 	void Awake() {
 		filter = this.gameObject.GetComponent<MeshFilter>();
-		pcollider = this.gameObject.GetComponent<PolygonCollider2D>();
+		ccollider = this.gameObject.GetComponent<CircleCollider2D>();
 		this.filter.mesh = makeMesh(7);
-		this.pcollider.CreatePrimitive(this._numsides, new Vector2(1, 1), new Vector2(0, 0));
+		this.ccollider.radius = (float)Math.Cos(Mathf.Deg2Rad * (360 / numsides));
 	}
 
 
