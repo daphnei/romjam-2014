@@ -78,16 +78,19 @@ public class PolygonMaker : MonoBehaviour {
 	public void removeNode() {
 		if (!transitioning && numsides>3) {
 			growing = false;
+			this.renderer.materials = ImageManager.updateTexture(_numsides - 4); growing = false;
 			transitioning = true;
 			transElapsed = 0f;
 			if (this.NumberOfSidesTransitionStart != null) {
 				this.NumberOfSidesTransitionStart();
 			}
+			Spin();
 		}
 	}
 
 	public void addNode() {
 		if (!transitioning) {
+			this.renderer.materials = ImageManager.updateTexture(_numsides - 2);
 			growing = true;
 			transitioning = true;
 			transElapsed = 0f;
@@ -98,6 +101,7 @@ public class PolygonMaker : MonoBehaviour {
 			if (this.NumberOfSidesTransitionStart != null) {
 				this.NumberOfSidesTransitionStart();
 			}
+			Spin();
 		}
 	}
 
@@ -146,14 +150,10 @@ public class PolygonMaker : MonoBehaviour {
 
 		if (!transitioning) {
 			if (Input.GetKey(KeyCode.S)) {
-				this.renderer.materials = ImageManager.updateTexture(_numsides - 2);
 				addNode();
-				Spin();
 			}
 			if (Input.GetKey(KeyCode.A)) {
-				this.renderer.materials = ImageManager.updateTexture(_numsides - 4);
 				removeNode();
-				Spin();
 			}
 		}
 		else if (transElapsed < transtime){
