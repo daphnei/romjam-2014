@@ -1,29 +1,21 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class ImageManager : MonoBehaviour {
+public class ImageManager {
 
-	Material[] mats;
-	PolygonMaker maker;
-	MeshRenderer render;
+	static Material[] mats;
 
 	// Use this for initialization
-	void Start () {
+	public static void loadMaterials () {
 		mats = Resources.LoadAll<Material>("m");
-		maker = this.GetComponent<PolygonMaker>();
-		render = this.GetComponent<MeshRenderer>();
 	}
 
-	public void updateTexture(int n){
-		Debug.Log("===");
-		Debug.Log(n);
+	public static Material[] updateTexture(int n){
+		//Debug.Log("===");
+		//Debug.Log(n);
 		int index = Mathf.Min(Mathf.Max(0, n), mats.Length);
-		Debug.Log(index);
-		renderer.materials = new Material[] { mats[index] };
+		//Debug.Log(index);
+		return new Material[] { mats[index] };
 
-	}
-
-	// Update is called once per frame
-	void Update () {
 	}
 }

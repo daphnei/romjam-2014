@@ -18,9 +18,9 @@ public class EnemyGenerator : MonoBehaviour {
 
 		public IEnumerable<TimelineEntry> UpdateTimeline() {
 			float timelinePos = Time.timeSinceLevelLoad - this.timelineStartPosition;
-			Debug.Log(timelinePos.ToString());
+//			Debug.Log(timelinePos.ToString());
 			if (this.timelineIndex >= this.entries.Count) {
-				Debug.Log("TOO LATE");
+//				Debug.Log("TOO LATE");
 				yield break;
 			}
 
