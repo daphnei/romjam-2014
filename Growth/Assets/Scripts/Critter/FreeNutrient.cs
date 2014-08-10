@@ -36,6 +36,11 @@ public class FreeNutrient : Critter {
 	override public void DoUpdate() {
 		base.DoUpdate();
 
+		Vector3 viewportCoords = Camera.main.WorldToViewportPoint(this.transform.position);
+		if (viewportCoords.x < -0.2f || viewportCoords.x > 1.2f || viewportCoords.y < -0.2f || viewportCoords.y > 1.2f) {
+			GameObject.Destroy(this);	
+		}
+
 		if (firstUpdate) {
 			animatorObj.nutColor = soonColor;
 
