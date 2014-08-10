@@ -4,10 +4,15 @@ using System.Collections;
 public class FreeNutrient : Critter {
 
 	NutrientAnimator animatorObj;
+	public float speed;
 
 	override protected void Start() {;
 		this.animatorObj = this.GetComponent<NutrientAnimator>();
 		base.Start();
+	}
+
+	public override void DoStart() {
+		base.DoStart();
 	}
 
 	// Update is called once per frame
@@ -19,7 +24,7 @@ public class FreeNutrient : Critter {
 		//Move the enemy toward the center. This should maybe go faster as the enemy gets closer?
 		Vector3 directionToPlayer = -(this.transform.position - positionOfPlayer);
 		directionToPlayer.Normalize();
-		this.transform.position += Time.deltaTime * (directionToPlayer * 1.5f);
+		this.transform.position += Time.deltaTime * (directionToPlayer * this.speed);
 	}
 
 	override protected void HitThePlayer()

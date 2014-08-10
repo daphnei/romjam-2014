@@ -74,19 +74,20 @@ public class EnemyGenerator : MonoBehaviour {
 		timeUntilSpawn -= Time.deltaTime;
 
 		foreach (TimelineEntry entry in this.timeline.UpdateTimeline()) {
-			this.SpawnEnemy();
+			this.SpawnEnemy(entry);
 		}
 	}
 
-	void SpawnEnemy()
+	void SpawnEnemy(TimelineEntry entry)
 	{
-		Debug.Log("whhat");
 		if (Camera.main == null)
 		{
 			throw new UnityException("This should not happen YOLOSWAG");
 		}
 
 		int enemyIndex = Random.Range(0, enemies.Length);
-		Instantiate(enemies[enemyIndex]);
+		GameObject obj = Instantiate(enemies[enemyIndex]) as GameObject;
+		obj.transform.position = World.Instance.player.transform.position.ToVector2() + Random.onUnitSphere.ToVector2() * (entry.spawnDistance); // TODO: + player-radius
+		obj.GetComponent<FreeNutrient>().speed = entry.speed;
 	}
 }
