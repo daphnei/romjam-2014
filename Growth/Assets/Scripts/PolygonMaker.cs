@@ -45,7 +45,7 @@ public class PolygonMaker : MonoBehaviour {
 		for (int i = 0; i < numsides; i++) {
 			verts[i] = Quaternion.AngleAxis(360f / numsides * -i, Vector3.forward) * Vector3.up;
 
-			uv[i] = new Vector2(0.5f+verts[i].x/2, 0.5f+verts[i].y/2);
+			uv[i] = v2uv(verts[i]);
 
 			tris[3 * i] = 0;
 			tris[3 * i + 1] = i;
@@ -92,16 +92,34 @@ public class PolygonMaker : MonoBehaviour {
 			verts[i] = Quaternion.AngleAxis(-firstAngle + offsetAngle - angstep * (i - 1), Vector3.forward) * Vector3.up;
 		}
 		for (int i = 0; i < ns; i++) {
-			uv[i] = new Vector2(0.5f + verts[i].x / 2, 0.5f + verts[i].y / 2);
+			uv[i] = v2uv(verts[i]);
 		}
 		
 		m.vertices = verts;
 		m.uv = uv;
 	}
 
+	static Vector2 v2uv(Vector3 v) {
+		return new Vector2(0.5f + v.x / 2, 0.5f + v.y / 2);
+	}
+
+	void updateTextureUVs() {
+		Mesh m = this.filter.mesh;
+		Vector3[] verts = m.vertices;
+		Vector2[] uv = new Vector2[verts.Length];
+		Debug.Log(this.transform.rotation.z);
+		for (int i = 0; i < verts.Length; i++) {
+			uv[i] = v2uv(Quaternion.AngleAxis( - this.transform.rotation.z * 360/ 2*Mathf.PI, Vector3.forward) * new Vector3(verts[i].x, verts[i].y, 0));
+		}
+		m.uv = uv;
+		this.filter.mesh = m;
+	}
+
 	// Update is called once per frame
 	void Update () {
 		transElapsed += Time.deltaTime;
+
+		updateTextureUVs();
 
 		if (!transitioning) {
 			if (Input.GetKey(KeyCode.S)) {
