@@ -13,7 +13,7 @@ public class BackgroundCycler : Pulser {
 	private float time;
 	private float nextTime;
 
-	private const int NUM_POLYGONS = 10;
+	private const int NUM_POLYGONS = 13;
 	public GameObject bgPolygon;
 	private MeshRenderer[] polygons;
 
