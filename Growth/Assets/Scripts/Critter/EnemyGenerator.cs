@@ -2,9 +2,8 @@
 using System.Collections;
 
 public class EnemyGenerator : MonoBehaviour {
-	public float minAttachRateInSeconds = 0.5f;
-	public float maxAttachRateInSeconds = 3f;
-
+	public float minAttachRateInSeconds = 0.1f;
+	public float maxAttachRateInSeconds = 0.3f;
 	private float timeUntilSpawn;
 
 	public GameObject[] enemies;

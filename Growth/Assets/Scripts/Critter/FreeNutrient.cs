@@ -19,7 +19,7 @@ public class FreeNutrient : Critter {
 		//Move the enemy toward the center. This should maybe go faster as the enemy gets closer?
 		Vector3 directionToPlayer = -(this.transform.position - positionOfPlayer);
 		directionToPlayer.Normalize();
-		this.transform.position += Time.deltaTime * (directionToPlayer * 1.5f);
+		this.transform.position += Time.deltaTime * (directionToPlayer * 4f);
 	}
 
 	override protected void HitThePlayer()

@@ -5,8 +5,8 @@ public class ZigZaggingEnemy : Enemy {
 	public float minSineMagnitude = 1;
 	public float maxSineMagnitude = 1.5f;
 
-	public float minSineFrequency = 1;
-	public float maxSineFrequency = 2;
+	public float minSineFrequency = 5;
+	public float maxSineFrequency = 10;
 	
 	private float sineMagnitude;
 	private float sineFrequency;
@@ -14,7 +14,7 @@ public class ZigZaggingEnemy : Enemy {
 	/**
 	 * A bigger value means it will take longer to get to the player.
 	 */
-	private float speedToCenter = 0.77f;
+	private float speedToCenter = 2f;
 
 	private Vector3 startingPos;
 
