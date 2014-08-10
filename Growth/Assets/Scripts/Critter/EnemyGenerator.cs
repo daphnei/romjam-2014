@@ -12,18 +12,19 @@ public class EnemyGenerator : MonoBehaviour {
 		List<TimelineEntry> entries = new List<TimelineEntry>();
 
 		public void RestartTimeline() {
-			this.timelineStartPosition = Time.timeSinceLevelLoad;
+			Debug.Log("asds11111111" + this.entries.First().spawnTime.ToString());
+			this.timelineStartPosition = entries.First().spawnTime;
 			this.timelineIndex = 0;
 		}
 
 		public IEnumerable<TimelineEntry> UpdateTimeline() {
 			float timelinePos = Time.timeSinceLevelLoad - this.timelineStartPosition;
-			Debug.Log(timelinePos.ToString());
+
 			if (this.timelineIndex >= this.entries.Count) {
-				Debug.Log("TOO LATE");
 				yield break;
 			}
 
+			Debug.Log(timelinePos.ToString() + " index " + this.timelineIndex);
 			TimelineEntry nextEntry = this.entries[this.timelineIndex];
 			if (timelinePos > nextEntry.spawnTime) {
 				yield return nextEntry;
@@ -63,6 +64,9 @@ public class EnemyGenerator : MonoBehaviour {
 	public GameObject[] enemies;
 	public Timeline timeline;
 
+	public float timestep = 1f;
+	public int timelength = 100;
+
 	// Use this for initialization
 	void Start () {
 		this.timeline = Timeline.GenerateTimeline(100, 1f);
@@ -74,6 +78,7 @@ public class EnemyGenerator : MonoBehaviour {
 		timeUntilSpawn -= Time.deltaTime;
 
 		foreach (TimelineEntry entry in this.timeline.UpdateTimeline()) {
+			Debug.Log("spwaning");
 			this.SpawnEnemy(entry);
 		}
 	}
