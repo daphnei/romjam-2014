@@ -108,7 +108,10 @@ public class PolygonMaker : MonoBehaviour {
 		Vector3[] verts = m.vertices;
 		Vector2[] uv = new Vector2[verts.Length];
 		for (int i = 0; i < verts.Length; i++) {
-			uv[i] = v2uv(Quaternion.AngleAxis( - this.transform.rotation.z * 360/ 2*Mathf.PI, Vector3.forward) * new Vector3(verts[i].x, verts[i].y, 0));
+			uv[i] = v2uv(
+				Quaternion.AngleAxis( 
+				(this.transform.eulerAngles.z),
+				Vector3.forward) * new Vector3(verts[i].x, verts[i].y, 0));
 		}
 		m.uv = uv;
 		this.filter.mesh = m;
