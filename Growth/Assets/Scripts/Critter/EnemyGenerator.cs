@@ -19,6 +19,7 @@ public class EnemyGenerator : MonoBehaviour {
 
 		public IEnumerable<TimelineEntry> UpdateTimeline() {
 			float timelinePos = Time.timeSinceLevelLoad - this.timelineStartPosition;
+
 			if (this.timelineIndex >= this.entries.Count) {
 				yield break;
 			}

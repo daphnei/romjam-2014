@@ -4,7 +4,7 @@ using System;
 
 public class PolygonMaker : MonoBehaviour {
 
-	private CircleCollider2D collider;
+	private CircleCollider2D ccollider;
 
 	//I know this hsouldn't be public with a getter setter, but I cannot too lazy to figure out the syntax.
 	public MeshFilter filter;
@@ -18,7 +18,7 @@ public class PolygonMaker : MonoBehaviour {
 			if (value >= 3 && value !=this._numsides) {
 				this._numsides = value;
 				this.filter.mesh = makeMesh(this._numsides);
-				this.collider.radius = (float) Math.Cos(Mathf.Deg2Rad * (360 / numsides /2));
+				this.ccollider.radius = (float) Math.Cos(Mathf.Deg2Rad * (360 / numsides /2));
 				if (this.NumberOfSidesChanged != null) {
 					this.NumberOfSidesChanged();
 				}
@@ -41,9 +41,11 @@ public class PolygonMaker : MonoBehaviour {
 	// Use this for initialization
 	void Awake() {
 		filter = this.gameObject.GetComponent<MeshFilter>();
-		collider = this.gameObject.GetComponent<CircleCollider2D>();
-		this.filter.mesh = makeMesh(7);
-		this.collider.radius = (float)Math.Cos(Mathf.Deg2Rad * (360 / numsides));
+		ccollider = this.gameObject.GetComponent<CircleCollider2D>();
+		this.numsides = 7;
+		ImageManager.loadMaterials();
+		this.renderer.materials = ImageManager.updateTexture(_numsides-3);
+		this.ccollider.radius = (float)Math.Cos(Mathf.Deg2Rad * (360 / numsides));
 	}
 
 
@@ -144,12 +146,12 @@ public class PolygonMaker : MonoBehaviour {
 
 		if (!transitioning) {
 			if (Input.GetKey(KeyCode.S)) {
-				this.GetComponent<ImageManager>().updateTexture(_numsides - 2);
+				this.renderer.materials = ImageManager.updateTexture(_numsides - 2);
 				addNode();
 				Spin();
 			}
 			if (Input.GetKey(KeyCode.A)) {
-				this.GetComponent<ImageManager>().updateTexture(_numsides - 4);
+				this.renderer.materials = ImageManager.updateTexture(_numsides - 4);
 				removeNode();
 				Spin();
 			}
