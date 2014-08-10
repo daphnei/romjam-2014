@@ -17,8 +17,8 @@ public class BackgroundCycler : Pulser {
 	public GameObject bgPolygon;
 	private MeshRenderer[] polygons;
 
-	// Use this for initialization
-	void Start () {
+	protected override void  Start()
+	{
 		PulseController.Instance.AddPulser(this);
 		time = Time.timeSinceLevelLoad;
 		nextTime = Time.timeSinceLevelLoad;
