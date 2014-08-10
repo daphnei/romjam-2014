@@ -225,6 +225,7 @@ public class Player : MonoBehaviour {
 			}
 
 			this.nutrientList.Clear();
+			PulseController.Instance.ChangeNumLayers(this.polygon.numsides + 1 - 3);
 			this.polygon.addNode();
 		}
 
@@ -234,6 +235,7 @@ public class Player : MonoBehaviour {
 
 	public void RemoveNutrient() {
 		if (this.nutrientList.Count == 0 && this.polygon.numsides > 3) {
+			PulseController.Instance.ChangeNumLayers(this.polygon.numsides - 1 - 3);
 			this.polygon.removeNode();
 
 			for (int i = 0; i < this.polygon.numsides; i++) {
