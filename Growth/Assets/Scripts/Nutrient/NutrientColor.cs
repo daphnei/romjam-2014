@@ -6,5 +6,5 @@ public enum NutrientColor {
 	Blue,
 	Green,
 	Yellow,
-	White
+	Purple
 };
