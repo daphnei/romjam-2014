@@ -89,7 +89,11 @@ public class Timeline {
 					break;
 			}
 
-			i += 2;
+			if (UnityEngine.Random.Range(0, 3) == 0) {
+				i += 1;
+			} else {
+				i += 2;
+			}
 		}
 		timeline.entries = entries.Where(e => e != null).OrderBy<TimelineEntry, float>(e => e.spawnTime).ToList<TimelineEntry>();
 		return timeline;
