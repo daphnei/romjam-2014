@@ -10,7 +10,17 @@ public class Bullet : MonoBehaviour {
 	public Vector2 centerPosition;
 	public BoxCollider2D bulletCollider;
 
-	private LineRenderer lineRenderer;
+	private NutrientColor color;
+	public NutrientColor Color {
+		get { return color; }
+		set {
+			color = value;
+			Debug.Log (color.ColorValue());
+			this.lineRenderer.material.color = color.ColorValue();
+		}
+	}
+
+	public LineRenderer lineRenderer;
 
 	void Start() {
 		this.lineRenderer = this.GetComponent<LineRenderer>();
