@@ -28,7 +28,7 @@ public class PolygonMaker : MonoBehaviour {
 	static float transtime = 0.5f;
 
 	// Use this for initialization
-	void Start() {
+	void Awake() {
 		filter = this.gameObject.GetComponent<MeshFilter>();
 		pcollider = this.gameObject.GetComponent<PolygonCollider2D>();
 		this.filter.mesh = makeMesh(3);
@@ -135,6 +135,7 @@ public class PolygonMaker : MonoBehaviour {
 				numsides = numsides - 1;
 			}
 			//Debug.Log(numsides);
+			World.Instance.player.PolygonDoneTransitioning();
 		}
 	}
 }

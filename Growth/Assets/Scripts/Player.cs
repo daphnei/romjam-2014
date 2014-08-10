@@ -2,7 +2,7 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class Player : MonoBehaviour {
+public class Player : Pulser {
 
 	const float TAP_TIME = 0.2f;
 	const float TAP_RADIUS = 20f;
@@ -31,6 +31,13 @@ public class Player : MonoBehaviour {
 
 	private bool canFire;
 
+	private float minRayLength = 1;
+	private float maxRayLength = 6;
+	private float curRayLength = 1;
+	private bool rayIncreasing = true;
+	private GameObject rayContainer;
+	private List<LineRenderer> rays = null;
+
 	// Use this for initialization
 	void Awake() {
 		World.Instance.Register(this);
@@ -38,6 +45,17 @@ public class Player : MonoBehaviour {
 		this.nutrientParent = new GameObject();
 		this.nutrientParent.transform.position = this.transform.position;
 		this.nutrientList = new List<CapturedNutrient>();
+	}
+
+	protected override void Start()
+	{
+		base.Start();
+
+		this.rays = new List<LineRenderer>();
+		this.rayContainer = new GameObject("Ray Container");
+		this.rayContainer.transform.parent = this.gameObject.transform;	
+
+		setupRays();
 	}
 
 	// Update is called once per frame
@@ -94,6 +112,22 @@ public class Player : MonoBehaviour {
 		if (this.rotationSpeed != 0)
 			this.lastPlayerRotationDir = (this.rotationSpeed > 0 ? -1 : 1);
 		this.nutrientParent.transform.Rotate(Vector3.forward * Time.deltaTime * 80 * this.lastPlayerRotationDir);
+
+		for (int i = 0; i < this.rays.Count; i++)
+		{
+			float inc = this.rayIncreasing ? 0.02f : -0.02f;
+
+			this.curRayLength = Mathf.Clamp(this.curRayLength + inc, this.minRayLength, this.maxRayLength);
+
+			LineRenderer lr = this.rays[i];
+			Vector3 vertex = this.polygon.vertices[i];
+
+			Vector3 lineDirection = (vertex - this.transform.position);
+			lineDirection.Normalize();
+			
+			lr.SetPosition(0, vertex);
+			lr.SetPosition(1, lineDirection * curRayLength);
+		}
 	}
 
 	private void OnPlayerTappedScreen() {
@@ -139,6 +173,34 @@ public class Player : MonoBehaviour {
 		}
 	}
 
+	private void setupRays()
+	{
+		foreach (LineRenderer lr in this.rays)
+		{
+			Destroy(lr.gameObject);
+		}
+
+		this.rays.Clear();
+
+		foreach (Vector3 vertex in this.polygon.vertices)
+		{
+			GameObject newRay = new GameObject("Ray");
+
+			Vector3 lineDirection = (vertex - this.transform.position);
+			lineDirection.Normalize();
+
+			LineRenderer lr = newRay.AddComponent<LineRenderer>();
+			lr.transform.parent = rayContainer.transform;
+			lr.useWorldSpace = false;
+			lr.SetVertexCount(2);
+			lr.SetPosition(0, vertex);
+			lr.SetPosition(1, lineDirection * curRayLength);
+			lr.SetWidth(0.05f, 0.05f);
+			
+			rays.Add(lr);
+		}
+	}
+
 	public void AddNutrient() {
 		int curNumVertices = this.polygon.vertices.Length;
 
@@ -180,13 +242,25 @@ public class Player : MonoBehaviour {
 			for (int i = 0; i < this.polygon.numsides; i++) {
 				this.AddNutrient();
 			}
+
 		} else if (this.nutrientList.Count > 0) {
 			CapturedNutrient n = this.nutrientList.Pop();
 			GameObject.Destroy(n.gameObject);
 		}
 	}
 
+	//This is a crap hack.
+	public void PolygonDoneTransitioning()
+	{
+		this.setupRays();
+	}
+
 	void OnGUI() {
 		GUI.Label(new Rect(0, 0, 100, 100), this.rotationSpeed.ToString());
+	}
+
+	public override void Pulse()
+	{
+		this.rayIncreasing = !this.rayIncreasing;
 	}
 }
