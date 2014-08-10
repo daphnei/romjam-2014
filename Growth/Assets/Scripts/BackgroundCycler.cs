@@ -13,7 +13,7 @@ public class BackgroundCycler : Pulser {
 	private float time;
 	private float nextTime;
 
-	private const int NUM_POLYGONS = 20;
+	private const int NUM_POLYGONS = 10;
 	public GameObject bgPolygon;
 	private MeshRenderer[] polygons;
 
@@ -28,6 +28,7 @@ public class BackgroundCycler : Pulser {
 
 		polygons = new MeshRenderer[NUM_POLYGONS];
 		GameObject parent = new GameObject("BG Polygons Parent");
+		parent.transform.parent = GameObject.Find("Player").transform;
 		for (int i = 0; i < NUM_POLYGONS; i++)
 		{
 			GameObject g = GameObject.Instantiate(bgPolygon) as GameObject;
