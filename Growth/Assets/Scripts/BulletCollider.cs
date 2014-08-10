@@ -12,6 +12,10 @@ public class BulletCollider : MonoBehaviour {
 				Destroy(other.gameObject);
 			
 				World.Instance.player.AddNutrient();
+			} else {
+				nutrient.movementSign = -1;
+
+				World.Instance.player.RemoveNutrient();
 			}
 
 		} else if (other.GetComponent<Enemy>() != null) {

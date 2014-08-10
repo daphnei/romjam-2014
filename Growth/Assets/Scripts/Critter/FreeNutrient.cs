@@ -10,6 +10,9 @@ public class FreeNutrient : Critter {
 	// ugly hack for setting color after animator initialized
 	private bool firstUpdate = true;
 
+	// change direction
+	public int movementSign = 1;
+
 	protected virtual void Awake() {
 		this.animatorObj = this.GetComponent<NutrientAnimator>();
 	}
@@ -28,7 +31,8 @@ public class FreeNutrient : Critter {
 
 		if (firstUpdate) {
 			Array values = Enum.GetValues(typeof(NutrientColor));
-			animatorObj.Color = (NutrientColor)values.GetValue(UnityEngine.Random.Range(0, values.Length));
+			int possibleColors = World.Instance.player.polygon.numsides;
+			animatorObj.Color = (NutrientColor)values.GetValue(UnityEngine.Random.Range(0, possibleColors));
 
 			firstUpdate = false;
 		}
@@ -38,7 +42,7 @@ public class FreeNutrient : Critter {
 		//Move the enemy toward the center. This should maybe go faster as the enemy gets closer?
 		Vector3 directionToPlayer = -(this.transform.position - positionOfPlayer);
 		directionToPlayer.Normalize();
-		this.transform.position += Time.deltaTime * (directionToPlayer * this.speed);
+		this.transform.position += Time.deltaTime * (directionToPlayer * this.speed) * movementSign;
 	}
 
 	override protected void HitThePlayer()
