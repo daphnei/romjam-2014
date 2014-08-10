@@ -13,7 +13,7 @@ public class ImageManager {
 	public static Material[] updateTexture(int n){
 		//Debug.Log("===");
 		//Debug.Log(n);
-		int index = Mathf.Min(Mathf.Max(0, n), mats.Length);
+		int index = Mathf.Min(Mathf.Max(0, n), mats.Length-1);
 		//Debug.Log(index);
 		return new Material[] { mats[index] };
 
