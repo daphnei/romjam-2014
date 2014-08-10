@@ -31,7 +31,7 @@ public class FreeNutrient : Critter {
 
 		if (firstUpdate) {
 			Array values = Enum.GetValues(typeof(NutrientColor));
-			int possibleColors = World.Instance.player.polygon.numsides;
+			int possibleColors = Math.Min (values.Length, World.Instance.player.polygon.numsides);
 			animatorObj.Color = (NutrientColor)values.GetValue(UnityEngine.Random.Range(0, possibleColors));
 
 			firstUpdate = false;
