@@ -9,7 +9,7 @@ public class NutrientAnimator : Pulser {
 	public float jitterweight = 0.2f;
 
 	private NutrientColor color;
-	public NutrientColor Color {
+	public NutrientColor nutColor {
 		get { return color; }
 		set {
 			color = value;
@@ -19,6 +19,9 @@ public class NutrientAnimator : Pulser {
 
 			if (this.core != null)
 				this.core.renderer.material.color = color.ColorValue();
+
+			if (this.parts != null)
+				this.parts.renderer.material.color = color.ColorValue();
 		}
 	}
 	
@@ -27,13 +30,18 @@ public class NutrientAnimator : Pulser {
 
 	private float pulseCount;
 
+	public int NUMPARTICLES = 10;
+
 	private Transform ring, core;
 	private Light myLight;
 	private ParticleSystem parts;
 
 	// Use this for initialization
 	protected override void Start() {
+		PulseController.Instance.AddPulser(this);
+		Debug.Log(":D");
 		base.Start();
+
 		core = this.transform.FindChild("core");
 		ring = this.transform.FindChild("ring");
 		myLight = this.GetComponent<Light>();
@@ -46,13 +54,23 @@ public class NutrientAnimator : Pulser {
 	}
 
 	override public void Pulse() {
-//		Debug.Log("!");
+		Debug.Log("!");
 		pulseCount = 0;
-		parts.Emit(20);
+		parts.Emit(NUMPARTICLES);
 	}
 
 	// Update is called once per frame
 	void Update() {
+		ParticleSystem.Particle[] ParticleList = new ParticleSystem.Particle[parts.particleCount];
+		parts.GetParticles(ParticleList);
+
+		for (int i = 0; i < ParticleList.Length; ++i) {
+			float LifeProcentage = (ParticleList[i].lifetime / ParticleList[i].startLifetime);
+			ParticleList[i].color = Color.Lerp( new Color(1,1,1,0), this.color.ColorValue(), LifeProcentage);
+		}
+
+		parts.SetParticles(ParticleList, parts.particleCount);
+
 
 		float pulse = 1;
 		if (pulseCount < pulseLength) {

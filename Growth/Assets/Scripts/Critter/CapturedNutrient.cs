@@ -15,7 +15,7 @@ public class CapturedNutrient : Pulser {
 	void Update()
 	{
 		if (firstUpdate) {
-			animatorObj.Color = animatorObj.Color;
+			animatorObj.nutColor = animatorObj.nutColor;
 			
 			firstUpdate = false;
 		}

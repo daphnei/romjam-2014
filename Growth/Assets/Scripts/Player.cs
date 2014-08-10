@@ -235,9 +235,12 @@ public class Player : MonoBehaviour {
 			nut.transform.parent = nutrientParent.transform;
 			nut.transform.localPosition = targetPosition;
 			nut.transform.localRotation = Quaternion.AngleAxis(0, Vector3.forward);
-			nut.GetComponent<NutrientAnimator>().Color = color;
+			nut.GetComponent<NutrientAnimator>().nutColor = color;
 
 			this.nutrientList.Add(nut);
+
+			this.particleSystem.startColor = color.ColorValue();
+			this.particleSystem.Emit(20);
 		}
 
 		//Reached the max number of nutrients for this polygom. Time to grow an extra side!

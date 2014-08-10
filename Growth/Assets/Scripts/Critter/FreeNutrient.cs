@@ -21,7 +21,7 @@ public class FreeNutrient : Critter {
 	public NutrientColor soonColor;
 
 	public NutrientColor Color {
-		get { return animatorObj.Color; }
+		get { return animatorObj.nutColor; }
 	}
 
 	public override void DoStart() {
@@ -33,7 +33,7 @@ public class FreeNutrient : Critter {
 		base.DoUpdate();
 
 		if (firstUpdate) {
-			this.animatorObj.Color = soonColor;
+			animatorObj.nutColor = soonColor;
 
 			firstUpdate = false;
 		}
