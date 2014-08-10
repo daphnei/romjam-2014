@@ -30,7 +30,7 @@ public class PolygonMaker : MonoBehaviour {
 	void Start() {
 		filter = this.gameObject.GetComponent<MeshFilter>();
 		pcollider = this.gameObject.GetComponent<PolygonCollider2D>();
-		this.filter.mesh = makeMesh(3);
+		this.filter.mesh = makeMesh(7);
 		this.pcollider.CreatePrimitive(this._numsides, new Vector2(1, 1), new Vector2(0, 0));
 	}
 

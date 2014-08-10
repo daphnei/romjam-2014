@@ -7,6 +7,7 @@ public class Player : MonoBehaviour {
 	const float TAP_TIME = 0.2f;
 	const float TAP_RADIUS = 20f;
 	const float LINE_WIDTH = 0.1f;
+	const float SPAWN_TIME = 2f;
 
 	public float rotationFriction = 600;
 	public float maxRotationSpeed = 1500;
@@ -24,6 +25,7 @@ public class Player : MonoBehaviour {
 	float touchTime = 0;
 	float averageRotateSpeed;
 	float prevRealTime;
+	float spawnTimer = 0;
 
 	private GameObject nutrientParent;
 	private List<CapturedNutrient> nutrientList;
@@ -64,7 +66,7 @@ public class Player : MonoBehaviour {
 			if (this.prevMousePosition.HasValue) {
 				if (this.touchTime < TAP_TIME) {
 					if ((this.prevMousePosition.Value - Input.mousePosition).magnitude < TAP_RADIUS) {
-						this.OnPlayerTappedScreen();
+						// this.CreateBulletRing();
 					}
 				}
 
@@ -82,50 +84,70 @@ public class Player : MonoBehaviour {
 
 		this.prevRealTime = Time.realtimeSinceStartup;
 
-		//Slowly rotate the nutrients in the center so that they aren't completely just standing there.
-		//Rotate in the opposite direction to how the player is rotating, becuase it looks cool.
+		// Slowly rotate the nutrients in the center so that they aren't completely just standing there.
+		// Rotate in the opposite direction to how the player is rotating, becuase it looks cool.
 		if (this.rotationSpeed != 0)
 			this.lastPlayerRotationDir = (this.rotationSpeed > 0 ? -1 : 1);
 		this.nutrientParent.transform.Rotate(Vector3.forward * Time.deltaTime * 80 * this.lastPlayerRotationDir);
+
+		// Handle spawn timers.
+		this.spawnTimer -= Time.deltaTime;
+		if (this.spawnTimer <= 0) {
+			this.CreateBulletRing();
+			this.spawnTimer = SPAWN_TIME;
+		}
 	}
 
-	private void OnPlayerTappedScreen() {
+	private void CreateBulletRing() {
 		Vector3[] vertices = this.polygon.vertices;
+		int missingIndex = Random.Range(0, vertices.Length - 1);
 		for (int i = 0; i < vertices.Length; i++) {
+			if (missingIndex == i) {
+				continue;
+			}
 			int i1 = i == 0 ? vertices.Length - 1 : i - 1;
 			int i2 = i;
-			Vector3 v1 = this.polygon.transform.TransformPoint(vertices[i1]);
-			Vector3 v2 = this.polygon.transform.TransformPoint(vertices[i2]);
-			Vector3 vCenter = (v1 + v2) / 2;
-
-			GameObject g = new GameObject();
-			g.transform.position = vCenter;
-			g.name = "Bullet";
-			g.AddComponent<Bullet>().localVelocity = (vertices[i1] + vertices[i2]) / 2;
-
-			LineRenderer lr = g.AddComponent<LineRenderer>();
-			lr.transform.parent = this.bulletContainer.transform;
-			lr.useWorldSpace = false;
-			lr.SetVertexCount(2);
-			lr.SetPosition(0, v1 - vCenter);
-			lr.SetPosition(1, v2 - vCenter);
-			lr.SetWidth(LINE_WIDTH, LINE_WIDTH);
-
-			GameObject colliderObj = new GameObject();
-			colliderObj.name = "Collider";
-			colliderObj.transform.parent = g.transform;
-			colliderObj.transform.position = g.transform.position;
-			colliderObj.AddComponent<BulletCollider>().bullet = g.GetComponent<Bullet>();
-
-			Rigidbody2D rb = colliderObj.AddComponent<Rigidbody2D>();
-			rb.isKinematic = false;
-			rb.gravityScale = 0;
-
-			BoxCollider2D bc = colliderObj.AddComponent<BoxCollider2D>();
-			bc.size = new Vector2((v1 - v2).magnitude, LINE_WIDTH);
-			bc.transform.Rotate(new Vector3(0, 0, 1), (v1 - v2).ToVector2().AngleFromUnitX());
-			bc.isTrigger = true;
+			this.CreateBullet(vertices, i1, i2);
 		}
+	}
+
+	private void CreateBullet(Vector3[] vertices, int i1, int i2) {
+		Vector3 v1 = this.polygon.transform.TransformPoint(vertices[i1]);
+		Vector3 v2 = this.polygon.transform.TransformPoint(vertices[i2]);
+		Vector3 vCenter = (v1 + v2) / 2;
+
+		GameObject g = new GameObject();
+		g.transform.position = vCenter;
+		g.name = "Bullet";
+
+		Bullet bullet = g.AddComponent<Bullet>();
+		bullet.localVelocity = (vertices[i1] + vertices[i2]) / 2;
+		bullet.lengthPerDistance = (v1 - v2).magnitude / (vCenter - this.transform.position).magnitude;
+		bullet.centerPosition = this.transform.position;
+
+		LineRenderer lr = g.AddComponent<LineRenderer>();
+		lr.transform.parent = this.bulletContainer.transform;
+		lr.SetVertexCount(2);
+		/* lr.useWorldSpace = false;
+		lr.SetPosition(0, v1 - vCenter);
+		lr.SetPosition(1, v2 - vCenter); */
+		lr.SetWidth(LINE_WIDTH, LINE_WIDTH);
+
+		GameObject colliderObj = new GameObject();
+		colliderObj.name = "Collider";
+		colliderObj.transform.parent = g.transform;
+		colliderObj.transform.position = g.transform.position;
+		colliderObj.AddComponent<BulletCollider>().bullet = g.GetComponent<Bullet>();
+
+		Rigidbody2D rb = colliderObj.AddComponent<Rigidbody2D>();
+		rb.isKinematic = false;
+		rb.gravityScale = 0;
+
+		BoxCollider2D bc = colliderObj.AddComponent<BoxCollider2D>();
+		bc.size = new Vector2((v1 - v2).magnitude, LINE_WIDTH);
+		bc.transform.Rotate(new Vector3(0, 0, 1), (v1 - v2).ToVector2().AngleFromUnitX());
+		bc.isTrigger = true;
+		bullet.bulletCollider = bc;
 	}
 
 	public void AddNutrient() {
