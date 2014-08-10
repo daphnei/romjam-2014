@@ -15,7 +15,7 @@ public class PolygonMaker : MonoBehaviour {
 		get { return this._numsides; }
 		set 
 		{
-			if (value >= 3 && value !=this._numsides) {
+			if (value >= 3) {
 				this._numsides = value;
 				this.filter.mesh = makeMesh(this._numsides);
 				this.ccollider.radius = (float) Math.Cos(Mathf.Deg2Rad * (360 / numsides /2));
@@ -42,7 +42,7 @@ public class PolygonMaker : MonoBehaviour {
 	void Awake() {
 		filter = this.gameObject.GetComponent<MeshFilter>();
 		ccollider = this.gameObject.GetComponent<CircleCollider2D>();
-		this.numsides = 4;
+		this.numsides = _numsides;
 		ImageManager.loadMaterials();
 		this.renderer.materials = ImageManager.updateTexture(_numsides-3);
 		this.ccollider.radius = (float)Math.Cos(Mathf.Deg2Rad * (360 / numsides));
