@@ -21,7 +21,7 @@ public class PulseController : SceneSingleton<PulseController> {
 		pulsers = this.GetComponentsInChildren<Pulser>().ToList();
 
 		// nobody likes Newgrounds music
-//		song.volume = 0;
+		song.volume = 0;
 		song.Play();
 	}
 	
