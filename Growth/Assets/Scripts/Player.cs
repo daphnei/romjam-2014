@@ -219,6 +219,9 @@ public class Player : MonoBehaviour {
 			this.nutrientList.Clear();
 			this.polygon.addNode();
 		}
+
+		//Add to the score
+		World.Instance.score.Increment(1);
 	}
 
 	public void RemoveNutrient() {

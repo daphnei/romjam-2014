@@ -9,8 +9,14 @@ using System.Collections.Generic;
 public class World : SceneSingleton<World> {
 
 	public Player player;
+	public ScoreText score;
 
 	public void Register(Player player) {
 		this.player = player;
+	}
+
+	public void Register(ScoreText score)
+	{
+		this.score = score;
 	}
 }
