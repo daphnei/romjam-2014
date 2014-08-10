@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using System.Collections;
-using System;
 
 public class PolygonMaker : MonoBehaviour {
 
@@ -19,9 +18,6 @@ public class PolygonMaker : MonoBehaviour {
 				this._numsides = value;
 				this.filter.mesh = makeMesh(this._numsides);
 				this.pcollider.CreatePrimitive(this._numsides, new Vector2(1, 1), new Vector2(0, 0));
-				if (this.NumberOfSidesChanged != null) {
-					this.NumberOfSidesChanged();
-				}
 			}
 		}
 	}
@@ -29,19 +25,16 @@ public class PolygonMaker : MonoBehaviour {
 	private float spinCount = 0f;
 	private float spinTime = 1f;
 
-	public event Action NumberOfSidesChanged;
-	public event Action NumberOfSidesTransitionStart;
-
 	private bool transitioning = false;
 	private bool growing = true;
 	private float transElapsed = 0f;
 	static float transtime = 0.5f;
 
 	// Use this for initialization
-	void Awake() {
+	void Start() {
 		filter = this.gameObject.GetComponent<MeshFilter>();
 		pcollider = this.gameObject.GetComponent<PolygonCollider2D>();
-		this.filter.mesh = makeMesh(7);
+		this.filter.mesh = makeMesh(3);
 		this.pcollider.CreatePrimitive(this._numsides, new Vector2(1, 1), new Vector2(0, 0));
 	}
 
@@ -77,9 +70,6 @@ public class PolygonMaker : MonoBehaviour {
 			growing = false;
 			transitioning = true;
 			transElapsed = 0f;
-			if (this.NumberOfSidesTransitionStart != null) {
-				this.NumberOfSidesTransitionStart();
-			}
 		}
 	}
 
@@ -92,9 +82,6 @@ public class PolygonMaker : MonoBehaviour {
 			Mesh m = makeMesh(numsides + 1);
 			updateTransitionalMesh(0f, 0f, m);
 			filter.mesh = m;
-			if (this.NumberOfSidesTransitionStart != null) {
-				this.NumberOfSidesTransitionStart();
-			}
 		}
 	}
 

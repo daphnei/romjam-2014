@@ -26,11 +26,13 @@ public class PolygonMaker : MonoBehaviour {
 		}
 	}
 
+<<<<<<< HEAD
 	private float spinCount = 0f;
 	private float spinTime = 1f;
-
+=======
 	public event Action NumberOfSidesChanged;
 	public event Action NumberOfSidesTransitionStart;
+>>>>>>> 6692549333978a26886b78f9137ab5976ec16406
 
 	private bool transitioning = false;
 	private bool growing = true;

@@ -1,18 +1,28 @@
 ﻿using UnityEngine;
+using System;
 using System.Collections;
 
 public class FreeNutrient : Critter {
 
 	NutrientAnimator animatorObj;
 
-	override protected void Start() {;
+	// ugly hack for setting color after animator initialized
+	private bool firstUpdate = true;
+
+	protected virtual void Awake() {
 		this.animatorObj = this.GetComponent<NutrientAnimator>();
-		base.Start();
 	}
 
 	// Update is called once per frame
 	override public void DoUpdate () {
 		base.DoUpdate();
+
+		if (firstUpdate) {
+			Array values = Enum.GetValues(typeof(NutrientColor));
+			animatorObj.Color = (NutrientColor)values.GetValue(UnityEngine.Random.Range(0, values.Length));
+
+			firstUpdate = false;
+		}
 
 		Vector3 positionOfPlayer = World.Instance.player.transform.position;
 		
