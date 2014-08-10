@@ -13,6 +13,10 @@ public class FreeNutrient : Critter {
 		this.animatorObj = this.GetComponent<NutrientAnimator>();
 	}
 
+	public NutrientColor Color {
+		get { return animatorObj.Color; }
+	}
+
 	// Update is called once per frame
 	override public void DoUpdate () {
 		base.DoUpdate();
