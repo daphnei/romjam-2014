@@ -124,9 +124,19 @@ public class Player : Pulser {
 
 			Vector3 lineDirection = (vertex - this.transform.position);
 			lineDirection.Normalize();
-			
-			lr.SetPosition(0, vertex);
-			lr.SetPosition(1, lineDirection * curRayLength);
+
+			Vector2 v1 = vertex;
+			Vector2 v2 = lineDirection * curRayLength;
+
+			lr.SetPosition(0, v1);
+			lr.SetPosition(1, v2);
+
+//			BoxCollider2D col = lr.gameObject.GetComponent<BoxCollider2D>() as BoxCollider2D;
+//			//col.center = Vector3.right * lineDirection.magnitude /2;
+//			col.size = new Vector3(lineDirection.magnitude, 1,1);
+//
+//			//col.size = new Vector2(lineDirection.magnitude, LINE_WIDTH);
+//			col.transform.Rotate(new Vector3(0, 0, lineDirection.ToVector2().AngleFromUnitX()));
 		}
 	}
 
@@ -196,9 +206,16 @@ public class Player : Pulser {
 			lr.SetPosition(0, vertex);
 			lr.SetPosition(1, lineDirection * curRayLength);
 			lr.SetWidth(0.05f, 0.05f);
-			
+
+			newRay.AddComponent<BoxCollider2D>();
+
 			rays.Add(lr);
 		}
+	}
+
+	void OnCollisionEnter2D(Collision2D other)
+	{
+		Debug.Log("COLLIDED");
 	}
 
 	public void AddNutrient() {
