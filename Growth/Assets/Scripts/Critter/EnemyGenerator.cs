@@ -142,11 +142,6 @@ public class EnemyGenerator : MonoBehaviour {
 
 	void SpawnEnemy(TimelineEntry entry)
 	{
-		if (Camera.main == null)
-		{
-			throw new UnityException("This should not happen YOLOSWAG");
-		}
-
 		int enemyIndex = UnityEngine.Random.Range(0, enemies.Length);
 		GameObject obj = Instantiate(enemies[enemyIndex]) as GameObject;
 		Vector2 dir = entry.angle.normalized; //Random.insideUnitCircle.normalized;
