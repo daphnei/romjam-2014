@@ -32,15 +32,15 @@ public class Critter : Pulser {
 	virtual public void DoUpdate() {
 		Vector3 positionOfPlayer = World.Instance.player.transform.position;
 
-		//At some point this can be replaced with a check for collision?
-		if (Mathf.Abs((this.transform.position - positionOfPlayer).magnitude) < 1.5f)
-		{
-			HitThePlayer();
-		}
-
 		if (this.transform.localScale != Vector3.one) {
 			this.transform.localScale = Vector3.MoveTowards(this.transform.localScale, this.initialScale, 0.02f);
 //			Debug.Log (this.transform.localScale);
+		}
+	}
+
+	void OnCollisionEnter2D(Collision2D collision) {
+		if (collision.collider.GetComponent<PolygonMaker>() != null) {
+			this.HitThePlayer();
 		}
 	}
 

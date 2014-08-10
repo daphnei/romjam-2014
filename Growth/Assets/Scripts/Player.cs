@@ -6,7 +6,7 @@ public class Player : MonoBehaviour {
 
 	const float TAP_TIME = 0.2f;
 	const float TAP_RADIUS = 20f;
-	const float LINE_WIDTH = 0.2f;
+	const float LINE_WIDTH = 0.1f;
 
 	public float rotationFriction = 600;
 	public float maxRotationSpeed = 1500;
@@ -27,6 +27,9 @@ public class Player : MonoBehaviour {
 
 	private GameObject nutrientParent;
 	private List<CapturedNutrient> nutrientList;
+	private int lastPlayerRotationDir = 1; //either 1 or -1
+
+	private bool canFire;
 
 	// Use this for initialization
 	void Awake() {
@@ -40,6 +43,11 @@ public class Player : MonoBehaviour {
 	// Update is called once per frame
 	void Update() {
 		float realDeltaTime = Time.realtimeSinceStartup - this.prevRealTime;
+
+		if (this.bulletContainer.transform.childCount == 0) {
+			this.canFire = true;
+			this.bulletContainer.transform.localRotation = Quaternion.Euler(Vector3.zero);
+		}
 
 		if (Input.GetMouseButton(0)) {
 			if (!this.prevMousePosition.HasValue) {
@@ -72,7 +80,9 @@ public class Player : MonoBehaviour {
 				this.touchTime = 0;
 			}
 		}
-		Time.timeScale = Mathf.Clamp(Mathf.Abs(this.rotationSpeed) / 80f, 0.2f, 3f);
+
+//		Time.timeScale = Mathf.Clamp(Mathf.Abs(this.rotationSpeed) / 80f, 0.2f, 3f);
+
 		this.rotationSpeed = Mathf.Clamp(this.rotationSpeed, -maxRotationSpeed, maxRotationSpeed);
 		this.transform.Rotate(new Vector3(0, 0, 1), this.rotationSpeed * realDeltaTime);
 		this.rotationSpeed = this.rotationSpeed.AbsSubtract(rotationFriction * realDeltaTime);
@@ -80,10 +90,17 @@ public class Player : MonoBehaviour {
 		this.prevRealTime = Time.realtimeSinceStartup;
 
 		//Slowly rotate the nutrients in the center so that they aren't completely just standing there.
-		this.nutrientParent.transform.Rotate(Vector3.forward * Time.deltaTime * 80);
+		//Rotate in the opposite direction to how the player is rotating, becuase it looks cool.
+		if (this.rotationSpeed != 0)
+			this.lastPlayerRotationDir = (this.rotationSpeed > 0 ? -1 : 1);
+		this.nutrientParent.transform.Rotate(Vector3.forward * Time.deltaTime * 80 * this.lastPlayerRotationDir);
 	}
 
 	private void OnPlayerTappedScreen() {
+		if (!this.canFire) {
+			return;
+		}
+
 		Vector3[] vertices = this.polygon.vertices;
 		for (int i = 0; i < vertices.Length; i++) {
 			int i1 = i == 0 ? vertices.Length - 1 : i - 1;
@@ -95,7 +112,7 @@ public class Player : MonoBehaviour {
 			GameObject g = new GameObject();
 			g.transform.position = vCenter;
 			g.name = "Bullet";
-			g.AddComponent<Bullet>().localVelocity = (vertices[i1] + vertices[i2]) / 2;
+			g.AddComponent<Bullet>().localVelocity = (vertices[i1] + vertices[i2]);
 
 			LineRenderer lr = g.AddComponent<LineRenderer>();
 			lr.transform.parent = this.bulletContainer.transform;
@@ -109,10 +126,16 @@ public class Player : MonoBehaviour {
 			colliderObj.name = "Collider";
 			colliderObj.transform.parent = g.transform;
 			colliderObj.transform.position = g.transform.position;
+			colliderObj.AddComponent<BulletCollider>().bullet = g.GetComponent<Bullet>();
+
+			Rigidbody2D rb = colliderObj.AddComponent<Rigidbody2D>();
+			rb.isKinematic = false;
+			rb.gravityScale = 0;
 
 			BoxCollider2D bc = colliderObj.AddComponent<BoxCollider2D>();
 			bc.size = new Vector2((v1 - v2).magnitude, LINE_WIDTH);
 			bc.transform.Rotate(new Vector3(0, 0, 1), (v1 - v2).ToVector2().AngleFromUnitX());
+			bc.isTrigger = true;
 		}
 	}
 
@@ -132,6 +155,7 @@ public class Player : MonoBehaviour {
 			CapturedNutrient nut = Object.Instantiate(this.nutrientPrefab) as CapturedNutrient;
 			nut.transform.parent = nutrientParent.transform;
 			nut.transform.localPosition = targetPosition;
+			nut.transform.localRotation = Quaternion.AngleAxis(0, Vector3.forward);
 
 			this.nutrientList.Add(nut);
 		}

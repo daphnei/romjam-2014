@@ -3,9 +3,10 @@ using System.Collections;
 
 public class PolygonMaker : MonoBehaviour {
 
-	private MeshFilter filter;
 	private PolygonCollider2D pcollider;
 
+	//I know this hsouldn't be public with a getter setter, but I cannot too lazy to figure out the syntax.
+	public MeshFilter filter;
 	public Vector3[] vertices { get { return this.filter.mesh.vertices; } }
 
 	public int _numsides = 3; //public to set in editor. pls no abus.
@@ -25,6 +26,15 @@ public class PolygonMaker : MonoBehaviour {
 	private bool growing = true;
 	private float transElapsed = 0f;
 	static float transtime = 0.5f;
+
+	// Use this for initialization
+	void Start() {
+		filter = this.gameObject.GetComponent<MeshFilter>();
+		pcollider = this.gameObject.GetComponent<PolygonCollider2D>();
+		this.filter.mesh = makeMesh(3);
+		this.pcollider.CreatePrimitive(this._numsides, new Vector2(1, 1), new Vector2(0, 0));
+	}
+
 
 	public static Mesh makeMesh(int numsides) {
 		Mesh m = new Mesh ();
@@ -70,13 +80,6 @@ public class PolygonMaker : MonoBehaviour {
 			updateTransitionalMesh(0f, 0f, m);
 			filter.mesh = m;
 		}
-	}
-
-	// Use this for initialization
-	void Start() {
-		filter = this.gameObject.GetComponent<MeshFilter>();
-		pcollider = this.gameObject.GetComponent<PolygonCollider2D>();
-		this.filter.mesh = makeMesh(this._numsides);
 	}
 
 	void updateTransitionalMesh(float firstAngle, float offsetAngle, Mesh m) {
