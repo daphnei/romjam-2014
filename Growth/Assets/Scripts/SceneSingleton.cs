@@ -33,14 +33,14 @@ public class SceneSingleton<T> : MonoBehaviour where T : MonoBehaviour {
 					}
 
 					if (_instance == null) {
-						GameObject singleton = new GameObject();
+						/*GameObject singleton = new GameObject();
 						_instance = singleton.AddComponent<T>();
 						singleton.name = "(singleton) " + typeof(T).ToString();
 
 
 						Debug.Log("[SceneSingleton] An instance of " + typeof(T) +
 							" is needed in the scene, so '" + singleton +
-							"' was created.");
+							"' was created.");*/
 					} else {
 						Debug.Log("[SceneSingleton] Using instance already created: " + _instance.gameObject.name);
 					}

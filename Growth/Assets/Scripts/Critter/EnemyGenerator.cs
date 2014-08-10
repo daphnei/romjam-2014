@@ -38,8 +38,8 @@ public class Timeline {
 			}
 			TimelineEntry entry = entries[i] = new TimelineEntry();
 			entry.hitTime = i * timeStep;
-			entry.speed = 0.5f + i * 0.1f;
-			entry.spawnDistance = 6f;
+			entry.speed = 0.3f + i * 0.08f;
+			entry.spawnDistance = 5f;
 		}
 		timeline.entries = entries.Where(e => e != null).OrderBy<TimelineEntry, float>(e => e.spawnTime).ToList<TimelineEntry>();
 		return timeline;
