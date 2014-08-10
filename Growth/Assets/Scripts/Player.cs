@@ -5,6 +5,7 @@ using System.Collections.Generic;
 public class Player : MonoBehaviour {
 
 	public const float LINE_WIDTH = 0.17f;
+	public const float PLAYER_RADIUS = 1.3f;
 	const float TAP_TIME = 0.2f;
 	const float TAP_RADIUS = 20f;
 	const float SPAWN_TIME = 2f;
@@ -219,9 +220,5 @@ public class Player : MonoBehaviour {
 			CapturedNutrient n = this.nutrientList.Pop();
 			GameObject.Destroy(n.gameObject);
 		}
-	}
-
-	void OnGUI() {
-		GUI.Label(new Rect(0, 0, 100, 100), this.rotationSpeed.ToString());
 	}
 }

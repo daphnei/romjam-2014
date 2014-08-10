@@ -5,7 +5,8 @@ using System.Collections;
 public class FreeNutrient : Critter {
 
 	NutrientAnimator animatorObj;
-	public float speed;
+	public Timeline timeline;
+	public TimelineEntry timelineEntry;
 
 	// ugly hack for setting color after animator initialized
 	private bool firstUpdate = true;
@@ -30,17 +31,15 @@ public class FreeNutrient : Critter {
 		}
 
 		Vector3 positionOfPlayer = World.Instance.player.transform.position;
-		
-		//Move the enemy toward the center. This should maybe go faster as the enemy gets closer?
-		Vector3 directionToPlayer = -(this.transform.position - positionOfPlayer);
-		directionToPlayer.Normalize();
-		this.transform.position += Time.deltaTime * (directionToPlayer * this.speed);
-	}
+		Vector3 dirPlayerToMe = this.transform.position - positionOfPlayer;
+		dirPlayerToMe.Normalize();
 
-	override protected void HitThePlayer()
-	{
-		base.HitThePlayer();
-		World.Instance.player.AddNutrient();
+		//Debug.Log("time " + this.timelineEntry.PercentBetweenSpawnAndHit(this.timeline));
+		this.transform.position = positionOfPlayer +
+			(dirPlayerToMe * (Player.PLAYER_RADIUS + timelineEntry.PercentBetweenSpawnAndHit(this.timeline) * timelineEntry.spawnDistance));
+
+		//base.HitThePlayer();
+		//World.Instance.player.AddNutrient();
 	}
 
 	override public void Pulse() {
