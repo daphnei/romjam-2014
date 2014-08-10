@@ -26,6 +26,10 @@ public class FreeNutrient : Critter {
 
 	public override void DoStart() {
 		base.DoStart();
+
+		Vector3 v = this.transform.position;
+		v.z = - 10;
+		this.transform.position = v;
 	}
 
 	// Update is called once per frame
@@ -36,6 +40,16 @@ public class FreeNutrient : Critter {
 			animatorObj.nutColor = soonColor;
 
 			firstUpdate = false;
+		}
+
+		//When close to the centure, delete and add a captured nutrient.
+		if (Vector2.Distance(this.transform.position, Vector2.zero) < 0.1f)
+		{
+			World.Instance.player.AddNutrient(this.Color);
+
+			Destroy (this.gameObject);
+
+			return;
 		}
 
 		Vector3 positionOfPlayer = World.Instance.player.transform.position;
@@ -57,6 +71,7 @@ public class FreeNutrient : Critter {
 	override protected void HitThePlayer()
 	{
 		base.HitThePlayer();
+
 		World.Instance.player.AddNutrient(this.Color);
 	}
 

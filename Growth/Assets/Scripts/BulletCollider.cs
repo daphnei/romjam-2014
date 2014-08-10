@@ -9,9 +9,11 @@ public class BulletCollider : MonoBehaviour {
 		if (other.GetComponent<FreeNutrient>() != null) {
 			FreeNutrient nutrient = other.GetComponent<FreeNutrient>();
 			if (nutrient.Color == bullet.Color) {
-				Destroy(other.gameObject);
-			
-				World.Instance.player.AddNutrient(nutrient.Color);
+
+				//Don't delete the nutrient let it permeate.
+				nutrient.GetComponent<CircleCollider2D>().enabled = false;
+
+				//When it gets to the center, a captured nutrient will be added.
 			} else {
 				nutrient.movementSign = -1;
 
