@@ -228,7 +228,7 @@ public class Player : MonoBehaviour {
 	/**
 	 * Takes in the color of the captured nutrient.
 	 */
-	public void AddNutrient(NutrientColor color) {
+	public void AddNutrient(NutrientColor color, bool increaseScore=true) {
 		int curNumVertices = this.polygon.vertices.Length;
 
 		//Add a nutrient if we're not at the max.
@@ -266,8 +266,9 @@ public class Player : MonoBehaviour {
 			this.polygon.addNode();
 		}
 
-		//Add to the score
-		World.Instance.score.Increment(1);
+		if (increaseScore) {
+			World.Instance.score.Increment(1);
+		}
 
 		this.pulseOut = true;
 	}
@@ -278,7 +279,7 @@ public class Player : MonoBehaviour {
 			this.polygon.removeNode();
 
 			for (int i = 0; i < this.polygon.numsides; i++) {
-				this.AddNutrient(EnemyGenerator.randomColor());
+				this.AddNutrient(EnemyGenerator.randomColor(), false);
 			}
 
 		} else if (this.nutrientList.Count > 0) {
