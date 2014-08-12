@@ -110,11 +110,18 @@ public class BackgroundCycler : Pulser {
 
 	private Color getColor()
 	{
+		//Max version
 		return new Color(
-					Mathf.Min(redMax / 255f, Mathf.Sin(frequency*time) * 0.5f + 0.3f),
-					Mathf.Min(greenMax / 255f, Mathf.Sin(frequency*time + 2) * 0.1f + 0.3f),
-					Mathf.Min(blueMax / 255f, Mathf.Sin(frequency*time + 4) * 0.1f + 0.3f)
+					Mathf.Min(redMax / 255f, Mathf.Sin(frequency*time) * 0.5f + 0.5f),
+					Mathf.Min(greenMax / 255f, Mathf.Sin(frequency*time + 2) * 0.5f + 0.5f),
+					Mathf.Min(blueMax / 255f, Mathf.Sin(frequency*time + 4) * 0.5f + 0.5f)
 					);
+		//Alex version
+//		return new Color(
+//			Mathf.Min(redMax / 255f, Mathf.Sin(frequency*time) * 0.5f + 0.5f),
+//			Mathf.Min(greenMax / 255f, Mathf.Sin(frequency*time + 2) * 0.5f + 0.5f),
+//			Mathf.Min(blueMax / 255f, Mathf.Sin(frequency*time + 4) * 0.5f + 0.5f)
+//			);
 	}
 
 }

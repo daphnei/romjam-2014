@@ -10,6 +10,10 @@ public class CapturedNutrient : Pulser {
 	protected override void Start() {
 		this.animatorObj = this.GetComponent<NutrientAnimator>();
 		base.Start();
+
+		Vector3 v = this.transform.position;
+		v.z = - 10;
+		this.transform.position = v;
 	}
 
 	void Update()

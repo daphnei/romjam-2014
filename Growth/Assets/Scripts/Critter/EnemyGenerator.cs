@@ -89,7 +89,11 @@ public class Timeline {
 					break;
 			}
 
-			i += 2;
+			if (UnityEngine.Random.Range(0, 3) == 0) {
+				i += 1;
+			} else {
+				i += 2;
+			}
 		}
 		timeline.entries = entries.Where(e => e != null).OrderBy<TimelineEntry, float>(e => e.spawnTime).ToList<TimelineEntry>();
 		return timeline;
@@ -142,11 +146,6 @@ public class EnemyGenerator : MonoBehaviour {
 
 	void SpawnEnemy(TimelineEntry entry)
 	{
-		if (Camera.main == null)
-		{
-			throw new UnityException("This should not happen YOLOSWAG");
-		}
-
 		int enemyIndex = UnityEngine.Random.Range(0, enemies.Length);
 		GameObject obj = Instantiate(enemies[enemyIndex]) as GameObject;
 		Vector2 dir = entry.angle.normalized; //Random.insideUnitCircle.normalized;
