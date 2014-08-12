@@ -284,8 +284,8 @@ public class Player : MonoBehaviour {
 		} else if (this.nutrientList.Count > 0) {
 			CapturedNutrient n = this.nutrientList.Pop();
 			GameObject.Destroy(n.gameObject);
-
-			this.takeDamage = numFramesToDoDamageVibrateFor;
 		}
+
+		this.takeDamage = numFramesToDoDamageVibrateFor;
 	}
 }
