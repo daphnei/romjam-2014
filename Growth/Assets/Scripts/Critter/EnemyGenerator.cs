@@ -120,7 +120,7 @@ public class EnemyGenerator : MonoBehaviour {
 	public Timeline timeline;
 
 	float timestep = 0.6f;
-	public int timelength = 100;
+	public int timelength = 10000;
 
 	// Use this for initialization
 	void Start () {
