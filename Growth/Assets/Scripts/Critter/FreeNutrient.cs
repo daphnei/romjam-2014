@@ -37,7 +37,7 @@ public class FreeNutrient : Critter {
 		base.DoUpdate();
 
 		Vector3 viewportCoords = Camera.main.WorldToViewportPoint(this.transform.position);
-		if (viewportCoords.x < -0.2f || viewportCoords.x > 1.2f || viewportCoords.y < -0.2f || viewportCoords.y > 1.2f) {
+		if (viewportCoords.x < -0.5f || viewportCoords.x > 1.5f || viewportCoords.y < -0.5f || viewportCoords.y > 1.5f) {
 			GameObject.Destroy(this);	
 		}
 
@@ -58,19 +58,18 @@ public class FreeNutrient : Critter {
 		}
 
 		Vector3 positionOfPlayer = World.Instance.player.transform.position;
-		if (this.movementSign == 1) {
-			Vector3 dirPlayerToMe = this.transform.position - positionOfPlayer;
-			dirPlayerToMe.Normalize();
 
-			//Debug.Log("time " + this.timelineEntry.PercentBetweenSpawnAndHit(this.timeline));
-			this.transform.position = positionOfPlayer +
-				(dirPlayerToMe * (Player.PLAYER_RADIUS + timelineEntry.PercentBetweenSpawnAndHit(this.timeline) * timelineEntry.spawnDistance));
+
+		Vector3 dirPlayerToMe;
+		if (this.movementSign == 1) {
+			dirPlayerToMe = this.transform.position - positionOfPlayer;
 		} else {
-			//Move the enemy toward the center. This should maybe go faster as the enemy gets closer?
-			Vector3 directionToPlayer = -(this.transform.position - positionOfPlayer);
-			directionToPlayer.Normalize();
-			this.transform.position += Time.deltaTime * (directionToPlayer * this.timelineEntry.speed) * movementSign;
+			dirPlayerToMe = -(this.transform.position - positionOfPlayer);
 		}
+		dirPlayerToMe.Normalize();
+
+		this.transform.position = positionOfPlayer +
+			(dirPlayerToMe * (Player.PLAYER_RADIUS + timelineEntry.PercentBetweenSpawnAndHit(this.timeline) * timelineEntry.spawnDistance));
 	}
 
 	override protected void HitThePlayer()

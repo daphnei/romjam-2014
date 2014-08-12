@@ -133,7 +133,7 @@ public class EnemyGenerator : MonoBehaviour {
 		timeUntilSpawn -= Time.deltaTime;
 
 		foreach (TimelineEntry entry in this.timeline.UpdateTimeline()) {
-			Debug.Log("spawning at " + entry.spawnTime + " (" + timeline.timelimePosition + ") to hit at " + entry.hitTime);
+//			Debug.Log("spawning at " + entry.spawnTime + " (" + timeline.timelimePosition + ") to hit at " + entry.hitTime);
 			this.SpawnEnemy(entry);
 		}
 	}
@@ -165,7 +165,7 @@ public class EnemyGenerator : MonoBehaviour {
 		Array values = Enum.GetValues(typeof(NutrientColor));
 		int possibleColors = Mathf.Min(values.Length, World.Instance.player.polygon.numsides);
 		NutrientColor color = (NutrientColor)values.GetValue(UnityEngine.Random.Range(0, possibleColors));
-		Debug.Log(color.ToString());
+//		Debug.Log(color.ToString());
 		
 		return color;
 	}
