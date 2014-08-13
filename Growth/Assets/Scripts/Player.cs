@@ -305,4 +305,8 @@ public class Player : MonoBehaviour {
 
 		this.takeDamage = numFramesToDoDamageVibrateFor;
 	}
+
+	public void ResetNutrients() {
+
+	}
 }

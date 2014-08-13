@@ -19,4 +19,14 @@ public class World : SceneSingleton<World> {
 	{
 		this.score = score;
 	}
+
+	/// <summary>
+	/// finds and destroys all onscreen particles.
+	/// </summary>
+	public void ClearScreen() {
+		FreeNutrient[] fs = UnityEngine.Object.FindObjectsOfType<FreeNutrient>();
+		foreach (FreeNutrient f in fs) {
+			//fs.PrettyKill(); TODO kill each things
+		}
+	}
 }
