@@ -72,7 +72,17 @@ public class BackgroundCycler : Pulser {
 		g.transform.position = new Vector3(0, 0, index + 10);
 		g.transform.localScale = new Vector2(randomScale * index, randomScale * index);
 
-		//g.transform.rotation = World.Instance.player.transform.rotation;
+		if (World.Instance != null)
+		{
+			//Rotate to the player's current rotation.
+			g.transform.rotation = World.Instance.player.transform.rotation;
+		}
+		else
+		{
+			//Rotate to a random location.
+			g.transform.rotation = Quaternion.AngleAxis(Random.Range(0f, 360f), Vector3.forward); 
+		}
+
 		MeshRenderer mr = polygons[index].gameObject.GetComponent<MeshRenderer>() as MeshRenderer;
 
 		mr.material.color = (index%2 == 0) ? c1 : c2;

@@ -264,6 +264,9 @@ public class Player : MonoBehaviour {
 			this.nutrientList.Clear();
 			PulseController.Instance.ChangeNumLayers(this.polygon.numsides + 1 - 3);
 			this.polygon.addNode();
+
+			//Update the background to show the new polygon.
+			World.Instance.background.UpdateMeshWithNewVertexCount(this.polygon.vertices.Count());
 		}
 
 		//Add to the score
