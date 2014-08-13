@@ -8,6 +8,14 @@ public class NutrientAnimator : Pulser {
 	public float pulseScale = 0.5f;
 	public float jitterweight = 0.2f;
 
+	public bool fadeOut = false;
+	public float fadeSpeed = 0.02f;
+	private float fadeAmount = 0f;
+
+	public bool FadedOut {
+		get { return this.fadeAmount >= 1f; }
+	}
+
 	private NutrientColor color;
 	public NutrientColor nutColor {
 		get { return color; }
@@ -38,8 +46,7 @@ public class NutrientAnimator : Pulser {
 
 	// Use this for initialization
 	protected override void Start() {
-		PulseController.Instance.AddPulser(this);
-		Debug.Log(":D");
+//		PulseController.Instance.AddPulser(this);
 		base.Start();
 
 		core = this.transform.FindChild("core");
@@ -54,10 +61,12 @@ public class NutrientAnimator : Pulser {
 
 	override public void Pulse() {
 		pulseCount = 0;
-		parts.Emit(NUMPARTICLES);
+
+		if (!this.fadeOut) {
+			parts.Emit(NUMPARTICLES);
+		}
 	}
 
-	// Update is called once per frame
 	void Update() {
 		/*
 		ParticleSystem.Particle[] ParticleList = new ParticleSystem.Particle[parts.particleCount];
@@ -89,5 +98,11 @@ public class NutrientAnimator : Pulser {
 
 		myLight.intensity = this.core.localScale.x;
 		myLight.range = this.ring.localScale.x;
+
+		if (this.fadeOut) {
+			this.fadeAmount = Mathf.Min(this.fadeAmount + this.fadeSpeed, 1);
+			this.ring.renderer.material.color = Color.Lerp(this.ring.renderer.material.color, new Color(255, 255, 255, 0), this.fadeAmount);
+			this.core.renderer.material.color = Color.Lerp(this.core.renderer.material.color, new Color(255, 255, 255, 0), this.fadeAmount);
+		}
 	}
 }

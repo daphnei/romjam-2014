@@ -59,17 +59,15 @@ public class FreeNutrient : Critter {
 
 		Vector3 positionOfPlayer = World.Instance.player.transform.position;
 
-
-		Vector3 dirPlayerToMe;
 		if (this.movementSign == 1) {
-			dirPlayerToMe = this.transform.position - positionOfPlayer;
-		} else {
-			dirPlayerToMe = -(this.transform.position - positionOfPlayer);
-		}
-		dirPlayerToMe.Normalize();
+			Vector3 dirPlayerToMe = (this.transform.position - positionOfPlayer) * this.movementSign;
+			dirPlayerToMe.Normalize();
 
-		this.transform.position = positionOfPlayer +
-			(dirPlayerToMe * (Player.PLAYER_RADIUS + timelineEntry.PercentBetweenSpawnAndHit(this.timeline) * timelineEntry.spawnDistance));
+			this.transform.position = positionOfPlayer +
+				(dirPlayerToMe * (Player.PLAYER_RADIUS + timelineEntry.PercentBetweenSpawnAndHit(this.timeline) * timelineEntry.spawnDistance));
+		} else {
+			this.transform.position += (this.timelineEntry.angle * this.timelineEntry.speed).ToVector3() / 50f;
+		}
 	}
 
 	override protected void HitThePlayer()
@@ -80,11 +78,14 @@ public class FreeNutrient : Critter {
 	}
 
 	override public void Pulse() {
-//		Debug.Log(this.animatorObj);
 		this.animatorObj.Pulse();
 	}
 
 	protected override void ChooseSpawnPoint() {
 		
+	}
+
+	public void FadeAway() {
+		this.animatorObj.fadeOut = true;
 	}
 }
