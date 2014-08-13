@@ -280,6 +280,7 @@ public class Player : MonoBehaviour {
 			this.nutrientList.Clear();
 			PulseController.Instance.ChangeNumLayers(this.polygon.numsides + 1 - 3);
 			this.polygon.addNode();
+			World.Instance.ClearScreen();
 		}
 
 		if (increaseScore) {
