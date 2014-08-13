@@ -9,14 +9,26 @@ public class Timeline {
 	public float timelimePosition { get { return Time.timeSinceLevelLoad - this.timelineStartPosition; } }
 	public float timelineStartPosition = 0;
 	int timelineIndex = 0;
+
+	public bool playing = false;
+
 	List<TimelineEntry> entries = new List<TimelineEntry>();
 
 	public void RestartTimeline() {
 		this.timelineStartPosition = Time.timeSinceLevelLoad - entries.First().spawnTime;
 		this.timelineIndex = 0;
+		this.playing = true;
+	}
+
+	public void PauseTimeline() {
+		this.playing = false;
 	}
 
 	public IEnumerable<TimelineEntry> UpdateTimeline() {
+		if (!this.playing) {
+			yield break;
+		}
+
 		float timelinePos = this.timelimePosition;
 
 		if (this.timelineIndex >= this.entries.Count) {
@@ -129,7 +141,6 @@ public class EnemyGenerator : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		this.timeline = Timeline.GenerateTimeline(this.timelength, this.timestep);
-		this.timeline.RestartTimeline();
 	}
 	
 	// Update is called once per frame
