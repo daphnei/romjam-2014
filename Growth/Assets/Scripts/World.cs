@@ -10,6 +10,7 @@ public class World : SceneSingleton<World> {
 
 	public Player player;
 	public ScoreText score;
+	public BackgroundCycler background;
 
 	public void Register(Player player) {
 		this.player = player;
@@ -19,4 +20,10 @@ public class World : SceneSingleton<World> {
 	{
 		this.score = score;
 	}
+
+	public void Register(BackgroundCycler background)
+	{
+		this.background = background;
+	}
 }
+

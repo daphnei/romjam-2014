@@ -15,10 +15,14 @@ public class BackgroundCycler : Pulser {
 
 	private const int NUM_POLYGONS = 13;
 	public GameObject bgPolygon;
-	private MeshRenderer[] polygons;
-
+	private BackgroundPolygon[] polygons;
+	
 	protected override void  Start()
 	{
+		if (World.Instance != null)
+		{
+			World.Instance.Register(this);
+		}
 		PulseController.Instance.AddPulser(this);
 		time = Time.timeSinceLevelLoad;
 		nextTime = Time.timeSinceLevelLoad;
@@ -26,35 +30,37 @@ public class BackgroundCycler : Pulser {
 		Color c1 = getColor();
 		Color c2 = c1 * .7f;
 
-		polygons = new MeshRenderer[NUM_POLYGONS];
-		GameObject parent = new GameObject("BG Polygons Parent");
+		polygons = new BackgroundPolygon[NUM_POLYGONS];
+		GameObject bgPolygonsoContainer = new GameObject("Background Container");
 
-		parent.transform.position = new Vector3(0,0,10);
-		
-
-		//When I re-use this thing in the menus, player will not exist.
-		GameObject player = GameObject.Find("Player");
-		if (player != null)
-		{
-			parent.transform.parent = player.transform;
-		}
+		//Make sure this is at the very back
+		bgPolygonsoContainer.transform.position = new Vector3(0,0,10);
 	
 		for (int i = 0; i < NUM_POLYGONS; i++)
 		{
 			GameObject g = GameObject.Instantiate(bgPolygon) as GameObject;
-			g.transform.parent = parent.transform;
+			g.transform.parent = bgPolygonsoContainer.transform;
 
 			MeshRenderer mr = g.GetComponent<MeshRenderer>() as MeshRenderer;
-			polygons[i] = mr;
+			BackgroundPolygon bgPoly = g.GetComponent<BackgroundPolygon>() as BackgroundPolygon;
 
-			polygons[i].sortingLayerName = "bkg";
-			polygons[i].sortingOrder = 0;
+			polygons[i] = bgPoly;
+
+			mr.sortingLayerName = "bkg";
+			mr.sortingOrder = 0;
 
 			randomizePolygon(i, c1, c2);
 		}
 
 		Camera.main.backgroundColor = c2;
-
+		if (World.Instance != null)
+		{
+			UpdateMeshWithNewVertexCount(World.Instance.player.polygon.vertices.Length);
+		}
+		else
+		{
+			UpdateMeshWithNewVertexCount(7);
+		}
 	}
 
 	private void randomizePolygon(int index, Color c1, Color c2)
@@ -67,8 +73,18 @@ public class BackgroundCycler : Pulser {
 		g.transform.localScale = new Vector2(randomScale * index, randomScale * index);
 
 		//g.transform.rotation = World.Instance.player.transform.rotation;
+		MeshRenderer mr = polygons[index].gameObject.GetComponent<MeshRenderer>() as MeshRenderer;
 
-		polygons[index].material.color = (index%2 == 0) ? c1 : c2;
+		mr.material.color = (index%2 == 0) ? c1 : c2;
+	}
+
+	public void UpdateMeshWithNewVertexCount(int numVertices)
+	{
+		Mesh newMesh = PolygonMaker.makeMesh(numVertices);
+		foreach (BackgroundPolygon bgPoly in this.polygons)
+		{
+			bgPoly.SetMesh(newMesh);
+		}
 	}
 
 	public override void Pulse ()
@@ -91,7 +107,6 @@ public class BackgroundCycler : Pulser {
 	// Update is called once per frame
 	void Update () {
 		time = Mathf.MoveTowards(time, nextTime, cycleMovementSpeed);
-		
 
 		for (int i = 0; i < NUM_POLYGONS; i++)
 		{
