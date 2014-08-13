@@ -105,9 +105,6 @@ public class NutrientAnimator : Pulser {
 
 		if (this.fadeOut) {
 			this.fadeAmount = this.fadeAmount + Time.deltaTime;
-			Debug.Log(this.fadeAmount);
-			Debug.Log(this.fadeSpeed);
-			Debug.Log("  "+this.fadeAmount / this.fadeSpeed);
 			kulur = Color.Lerp(
 				this.color.ColorValue(), new Color(1,1,1, 0), 
 				Easing.easeSin(  Mathf.Min(this.fadeAmount/this.fadeSpeed, 1) ) 

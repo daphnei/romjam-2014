@@ -39,5 +39,6 @@ public class ScoreText : MonoBehaviour {
 
 	public void Reset() {
 		score = 0;
+		this.guiText.text = score.ToString();
 	}
 }

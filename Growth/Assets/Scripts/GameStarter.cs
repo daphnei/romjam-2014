@@ -19,15 +19,15 @@ public class GameStarter : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		elapsed += Time.deltaTime;
-		if (Player.Instance.CurVerts() == 3 && Input.GetMouseButton(0)) {
+		if (Input.GetMouseButton(0)) {
 			elapsed = 0;
 		}
-
 		if (vis && Input.GetMouseButtonDown(0)) {
 			setVisibility(vis = false);
 			gen.timeline.RestartTimeline();
 		}
 		else if (!vis && Player.Instance.CurVerts() == 3 && elapsed > timetopause) {
+			Debug.Log("Done here");
 			//reset (with screen clear?)
 			setVisibility(vis = true);
 			gen.timeline.PauseTimeline();

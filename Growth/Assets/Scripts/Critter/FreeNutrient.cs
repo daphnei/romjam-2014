@@ -10,6 +10,7 @@ public class FreeNutrient : Critter {
 
 	// ugly hack for setting color after animator initialized
 	private bool firstUpdate = true;
+	private bool alreadyDead = false;
 
 	// change direction
 	public int movementSign = 1;
@@ -50,8 +51,9 @@ public class FreeNutrient : Critter {
 		//When close to the centure, delete and add a captured nutrient.
 		if (Vector2.Distance(this.transform.position, Vector2.zero) < 0.1f)
 		{
-			World.Instance.player.AddNutrient(this.Color);
-
+			if (!this.alreadyDead) {
+				World.Instance.player.AddNutrient(this.Color);
+			}
 			Destroy (this.gameObject);
 
 			return;
@@ -74,7 +76,9 @@ public class FreeNutrient : Critter {
 	{
 		base.HitThePlayer();
 
-		World.Instance.player.AddNutrient(this.Color);
+		if (!this.alreadyDead) {
+			World.Instance.player.AddNutrient(this.Color);
+		}
 	}
 
 	override public void Pulse() {
@@ -87,12 +91,12 @@ public class FreeNutrient : Critter {
 
 	public void PrettyKill() {
 		this.particleSystem.Emit(20);
-		this.movementSign = -1;
 		this.FadeAway();
 		Destroy(this.GetComponent<CircleCollider2D>());
 	}
 
 	public void FadeAway() {
 		this.animatorObj.fadeOut = true;
+		this.alreadyDead = true;
 	}
 }

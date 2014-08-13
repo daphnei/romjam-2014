@@ -238,7 +238,7 @@ public class Player : MonoBehaviour {
 	}
 
 	public int CurVerts() {
-		return this.polygon.vertices.Length;
+		return this.polygon.numsides;
 	}
 
 	/**
