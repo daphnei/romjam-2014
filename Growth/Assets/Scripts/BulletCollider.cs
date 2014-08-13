@@ -13,9 +13,7 @@ public class BulletCollider : MonoBehaviour {
 			if (nutrient.Color == bullet.Color) {
 				//When it gets to the center, a captured nutrient will be added.
 			} else {
-				nutrient.particleSystem.Emit(20);
-				nutrient.movementSign = -1;
-				nutrient.FadeAway();
+				nutrient.PrettyKill();
 
 				World.Instance.player.RemoveNutrient();
 			}

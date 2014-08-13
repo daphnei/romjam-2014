@@ -9,7 +9,7 @@ public class NutrientAnimator : Pulser {
 	public float jitterweight = 0.2f;
 
 	public bool fadeOut = false;
-	public float fadeSpeed = 0.02f;
+	private float fadeSpeed = 2f;
 	private float fadeAmount = 0f;
 
 	public bool FadedOut {
@@ -21,15 +21,19 @@ public class NutrientAnimator : Pulser {
 		get { return color; }
 		set {
 			color = value;
+			kulur = value.ColorValue();
+		}
+	}
 
+	private Color kulur {
+		set {
 			if (this.ring != null)
-				this.ring.renderer.material.color = color.ColorValue();
+				this.ring.renderer.material.color = value;
 
 			if (this.core != null)
-				this.core.renderer.material.color = color.ColorValue();
-
+				this.core.renderer.material.color = value;
 			if (this.parts != null)
-				parts.startColor = color.ColorValue();
+				parts.startColor = value;
 		}
 	}
 	
@@ -100,9 +104,17 @@ public class NutrientAnimator : Pulser {
 		myLight.range = this.ring.localScale.x;
 
 		if (this.fadeOut) {
-			this.fadeAmount = Mathf.Min(this.fadeAmount + this.fadeSpeed, 1);
-			this.ring.renderer.material.color = Color.Lerp(this.ring.renderer.material.color, new Color(255, 255, 255, 0), this.fadeAmount);
-			this.core.renderer.material.color = Color.Lerp(this.core.renderer.material.color, new Color(255, 255, 255, 0), this.fadeAmount);
+			this.fadeAmount = this.fadeAmount + Time.deltaTime;
+			Debug.Log(this.fadeAmount);
+			Debug.Log(this.fadeSpeed);
+			Debug.Log("  "+this.fadeAmount / this.fadeSpeed);
+			kulur = Color.Lerp(
+				this.color.ColorValue(), new Color(1,1,1, 0), 
+				Easing.easeSin(  Mathf.Min(this.fadeAmount/this.fadeSpeed, 1) ) 
+			);
+			if (this.fadeAmount >= this.fadeSpeed) {
+				Destroy(this.gameObject);
+			}
 		}
 	}
 }

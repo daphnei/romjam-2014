@@ -24,9 +24,10 @@ public class World : SceneSingleton<World> {
 	/// finds and destroys all onscreen particles.
 	/// </summary>
 	public void ClearScreen() {
+		Debug.Log("KILL MEE");
 		FreeNutrient[] fs = UnityEngine.Object.FindObjectsOfType<FreeNutrient>();
 		foreach (FreeNutrient f in fs) {
-			//fs.PrettyKill(); TODO kill each things
+			f.PrettyKill();
 		}
 	}
 }

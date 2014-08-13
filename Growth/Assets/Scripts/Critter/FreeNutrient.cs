@@ -85,6 +85,13 @@ public class FreeNutrient : Critter {
 		
 	}
 
+	public void PrettyKill() {
+		this.particleSystem.Emit(20);
+		this.movementSign = -1;
+		this.FadeAway();
+		Destroy(this.GetComponent<CircleCollider2D>());
+	}
+
 	public void FadeAway() {
 		this.animatorObj.fadeOut = true;
 	}
