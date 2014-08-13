@@ -33,7 +33,7 @@ public class GameStarter : MonoBehaviour {
 			gen.timeline.PauseTimeline();
 			World.Instance.score.Reset();
 			World.Instance.ClearScreen();
-			World.Instance.player.RemoveNutrient();
+			World.Instance.player.ResetNutrients();
 			//TODO also reset the nutirent count of player
 		}
 	}

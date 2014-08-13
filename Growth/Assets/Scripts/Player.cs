@@ -307,6 +307,8 @@ public class Player : MonoBehaviour {
 	}
 
 	public void ResetNutrients() {
-
+		while (this.nutrientList.Count > 0) {
+			RemoveNutrient();
+		}
 	}
 }
