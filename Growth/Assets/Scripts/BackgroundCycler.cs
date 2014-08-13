@@ -19,16 +19,21 @@ public class BackgroundCycler : Pulser {
 	
 	protected override void  Start()
 	{
-		if (World.Instance != null)
-		{
-			World.Instance.Register(this);
-		}
+		World.Instance.Register(this);
+
+		Player player = World.Instance.player;
+
 		PulseController.Instance.AddPulser(this);
 		time = Time.timeSinceLevelLoad;
 		nextTime = Time.timeSinceLevelLoad;
 
 		Color c1 = getColor();
 		Color c2 = c1 * .7f;
+
+		//Rotate all polys in the background to the player's current rotation if there is a player.
+		//Otherwise use a random angle.
+		Quaternion q = (player != null) ? player.transform.rotation : 
+										  Quaternion.AngleAxis(Random.Range(0f, 360f), Vector3.forward);
 
 		polygons = new BackgroundPolygon[NUM_POLYGONS];
 		GameObject bgPolygonsoContainer = new GameObject("Background Container");
@@ -49,13 +54,15 @@ public class BackgroundCycler : Pulser {
 			mr.sortingLayerName = "bkg";
 			mr.sortingOrder = 0;
 
-			randomizePolygon(i, c1, c2);
+			refreshBackground(i, c1, c2, q);
 		}
 
 		Camera.main.backgroundColor = c2;
-		if (World.Instance != null)
+
+		//Player will be null if we are in the menus.
+		if (player != null)
 		{
-			UpdateMeshWithNewVertexCount(World.Instance.player.polygon.vertices.Length);
+			UpdateMeshWithNewVertexCount(player.polygon.vertices.Length);
 		}
 		else
 		{
@@ -63,7 +70,7 @@ public class BackgroundCycler : Pulser {
 		}
 	}
 
-	private void randomizePolygon(int index, Color c1, Color c2)
+	private void refreshBackground(int index, Color c1, Color c2, Quaternion desiredRotation)
 	{
 		GameObject g = polygons[index].gameObject;
 
@@ -72,16 +79,7 @@ public class BackgroundCycler : Pulser {
 		g.transform.position = new Vector3(0, 0, index + 10);
 		g.transform.localScale = new Vector2(randomScale * index, randomScale * index);
 
-		if (World.Instance != null)
-		{
-			//Rotate to the player's current rotation.
-			g.transform.rotation = World.Instance.player.transform.rotation;
-		}
-		else
-		{
-			//Rotate to a random location.
-			g.transform.rotation = Quaternion.AngleAxis(Random.Range(0f, 360f), Vector3.forward); 
-		}
+		g.transform.rotation = desiredRotation;
 
 		MeshRenderer mr = polygons[index].gameObject.GetComponent<MeshRenderer>() as MeshRenderer;
 
@@ -106,9 +104,13 @@ public class BackgroundCycler : Pulser {
 		Color c1 = getColor();
 		Color c2 = c1 * .7f;
 
+		Player player = World.Instance.player;
+		Quaternion q = (player != null) ? player.transform.rotation : 
+			Quaternion.AngleAxis(Random.Range(0f, 360f), Vector3.forward);
+
 		for (int i = 0; i < NUM_POLYGONS; i++)
 		{
-			randomizePolygon(i, c1, c2);
+			refreshBackground(i, c1, c2, q);
 		}
 
 		Camera.main.backgroundColor = c2;
