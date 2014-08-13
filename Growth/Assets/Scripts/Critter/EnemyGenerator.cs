@@ -9,14 +9,26 @@ public class Timeline {
 	public float timelimePosition { get { return Time.timeSinceLevelLoad - this.timelineStartPosition; } }
 	public float timelineStartPosition = 0;
 	int timelineIndex = 0;
+
+	public bool playing = false;
+
 	List<TimelineEntry> entries = new List<TimelineEntry>();
 
 	public void RestartTimeline() {
 		this.timelineStartPosition = Time.timeSinceLevelLoad - entries.First().spawnTime;
 		this.timelineIndex = 0;
+		this.playing = true;
+	}
+
+	public void PauseTimeline() {
+		this.playing = false;
 	}
 
 	public IEnumerable<TimelineEntry> UpdateTimeline() {
+		if (!this.playing) {
+			yield break;
+		}
+
 		float timelinePos = this.timelimePosition;
 
 		if (this.timelineIndex >= this.entries.Count) {
@@ -124,12 +136,11 @@ public class EnemyGenerator : MonoBehaviour {
 	public Timeline timeline;
 
 	float timestep = 0.6f;
-	public int timelength = 100;
+	public int timelength = 10000;
 
 	// Use this for initialization
 	void Start () {
 		this.timeline = Timeline.GenerateTimeline(this.timelength, this.timestep);
-		this.timeline.RestartTimeline();
 	}
 	
 	// Update is called once per frame
@@ -137,7 +148,7 @@ public class EnemyGenerator : MonoBehaviour {
 		timeUntilSpawn -= Time.deltaTime;
 
 		foreach (TimelineEntry entry in this.timeline.UpdateTimeline()) {
-			Debug.Log("spawning at " + entry.spawnTime + " (" + timeline.timelimePosition + ") to hit at " + entry.hitTime);
+//			Debug.Log("spawning at " + entry.spawnTime + " (" + timeline.timelimePosition + ") to hit at " + entry.hitTime);
 			this.SpawnEnemy(entry);
 		}
 	}
@@ -164,7 +175,7 @@ public class EnemyGenerator : MonoBehaviour {
 		Array values = Enum.GetValues(typeof(NutrientColor));
 		int possibleColors = Mathf.Min(values.Length, World.Instance.player.polygon.numsides);
 		NutrientColor color = (NutrientColor)values.GetValue(UnityEngine.Random.Range(0, possibleColors));
-		Debug.Log(color.ToString());
+//		Debug.Log(color.ToString());
 		
 		return color;
 	}

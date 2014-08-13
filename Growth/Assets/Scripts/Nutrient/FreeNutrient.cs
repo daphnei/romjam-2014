@@ -10,6 +10,7 @@ public class FreeNutrient : Critter {
 
 	// ugly hack for setting color after animator initialized
 	private bool firstUpdate = true;
+	private bool alreadyDead = false;
 
 	// change direction
 	public int movementSign = 1;
@@ -50,26 +51,24 @@ public class FreeNutrient : Critter {
 		//When close to the centure, delete and add a captured nutrient.
 		if (Vector2.Distance(this.transform.position, Vector2.zero) < 0.1f)
 		{
-			World.Instance.player.AddNutrient(this.Color);
-
+			if (!this.alreadyDead) {
+				World.Instance.player.AddNutrient(this.Color);
+			}
 			Destroy (this.gameObject);
 
 			return;
 		}
 
 		Vector3 positionOfPlayer = World.Instance.player.transform.position;
+
 		if (this.movementSign == 1) {
-			Vector3 dirPlayerToMe = this.transform.position - positionOfPlayer;
+			Vector3 dirPlayerToMe = (this.transform.position - positionOfPlayer) * this.movementSign;
 			dirPlayerToMe.Normalize();
 
-			//Debug.Log("time " + this.timelineEntry.PercentBetweenSpawnAndHit(this.timeline));
 			this.transform.position = positionOfPlayer +
 				(dirPlayerToMe * (Player.PLAYER_RADIUS + timelineEntry.PercentBetweenSpawnAndHit(this.timeline) * timelineEntry.spawnDistance));
 		} else {
-			//Move the enemy toward the center. This should maybe go faster as the enemy gets closer?
-			Vector3 directionToPlayer = -(this.transform.position - positionOfPlayer);
-			directionToPlayer.Normalize();
-			this.transform.position += Time.deltaTime * (directionToPlayer * this.timelineEntry.speed) * movementSign;
+			this.transform.position += (this.timelineEntry.angle * this.timelineEntry.speed).ToVector3() / 50f;
 		}
 	}
 
@@ -77,15 +76,27 @@ public class FreeNutrient : Critter {
 	{
 		base.HitThePlayer();
 
-		World.Instance.player.AddNutrient(this.Color);
+		if (!this.alreadyDead) {
+			World.Instance.player.AddNutrient(this.Color);
+		}
 	}
 
 	override public void Pulse() {
-//		Debug.Log(this.animatorObj);
 		this.animatorObj.Pulse();
 	}
 
 	protected override void ChooseSpawnPoint() {
 		
+	}
+
+	public void PrettyKill() {
+		this.particleSystem.Emit(20);
+		this.FadeAway();
+		Destroy(this.GetComponent<CircleCollider2D>());
+	}
+
+	public void FadeAway() {
+		this.animatorObj.fadeOut = true;
+		this.alreadyDead = true;
 	}
 }

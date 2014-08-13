@@ -3,7 +3,7 @@ using System.Collections;
 
 public class Bullet : MonoBehaviour {
 
-	const float EDGE_THRESHOLD = -0.2f;
+	const float EDGE_THRESHOLD = 0.3f;
 
 	public Vector2 localVelocity;
 	public float lengthPerDistance;

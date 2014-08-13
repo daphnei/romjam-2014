@@ -8,15 +8,14 @@ public class BulletCollider : MonoBehaviour {
 	void OnTriggerEnter2D(Collider2D other) {
 		if (other.GetComponent<FreeNutrient>() != null) {
 			FreeNutrient nutrient = other.GetComponent<FreeNutrient>();
+			nutrient.GetComponent<CircleCollider2D>().enabled = false;
+
 			if (nutrient.Color == bullet.Color) {
-
-				//Don't delete the nutrient let it permeate.
-				nutrient.GetComponent<CircleCollider2D>().enabled = false;
-
 				//When it gets to the center, a captured nutrient will be added.
-			} else {
+			}
+			else {
 				nutrient.movementSign = -1;
-
+				nutrient.PrettyKill();
 				World.Instance.player.RemoveNutrient();
 			}
 

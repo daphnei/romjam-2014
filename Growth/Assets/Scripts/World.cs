@@ -25,5 +25,16 @@ public class World : SceneSingleton<World> {
 	{
 		this.background = background;
 	}
+
+	/// <summary>
+	/// finds and destroys all onscreen particles.
+	/// </summary>
+	public void ClearScreen() {
+		Debug.Log("KILL MEE");
+		FreeNutrient[] fs = UnityEngine.Object.FindObjectsOfType<FreeNutrient>();
+		foreach (FreeNutrient f in fs) {
+			f.PrettyKill();
+		}
+	}
 }
 
