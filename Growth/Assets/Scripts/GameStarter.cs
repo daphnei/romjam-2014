@@ -26,7 +26,7 @@ public class GameStarter : MonoBehaviour {
 			setVisibility(vis = false);
 			gen.timeline.RestartTimeline();
 		}
-		else if (!vis && Player.Instance.CurVerts() == 3 && elapsed > timetopause) {
+		else if (!vis && World.Instance.player.CurVerts() == 3 && elapsed > timetopause) {
 			Debug.Log("Done here");
 			//reset (with screen clear?)
 			setVisibility(vis = true);

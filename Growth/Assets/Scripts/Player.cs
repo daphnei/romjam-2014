@@ -41,11 +41,6 @@ public class Player : MonoBehaviour {
 	private bool canFire = true;
 	private bool pulseOut = false;
 
-	private static Player instance;
-	public static Player Instance {
-		get { return instance; }
-	}
-
 	/**
 	 * Showa take damage animation for this many frames;
 	 * */
@@ -53,10 +48,6 @@ public class Player : MonoBehaviour {
 	public int numFramesToDoDamageVibrateFor = 15;
 
 	public Player() : base(){
-		//pseudo singletone fuckit who gives
-		if (Player.instance == null) {
-			Player.instance = this;
-		}
 	}
 
 	// Use this for initialization
