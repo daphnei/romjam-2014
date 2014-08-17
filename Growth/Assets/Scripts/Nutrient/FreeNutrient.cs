@@ -14,12 +14,12 @@ public class FreeNutrient : Critter {
 
 	// change direction
 	public int movementSign = 1;
+	
+	public NutrientColor soonColor;
 
 	protected virtual void Awake() {
 		this.animatorObj = this.GetComponent<NutrientAnimator>();
 	}
-
-	public NutrientColor soonColor;
 
 	public NutrientColor Color {
 		get { return animatorObj.nutColor; }

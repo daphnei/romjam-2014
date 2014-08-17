@@ -5,7 +5,7 @@ public class GameStarter : MonoBehaviour {
 
 	public EnemyGenerator gen;
 
-	Renderer[] renderers;
+	public GameObject[] startScreenComponents;
 	bool vis = true;
 
 	static float timetopause = 5f;
@@ -13,7 +13,7 @@ public class GameStarter : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		renderers = gameObject.GetComponentsInChildren<Renderer>();
+		//GUI.skin.textField.fontSize = Screen.width/20;
 	}
 	
 	// Update is called once per frame
@@ -39,8 +39,8 @@ public class GameStarter : MonoBehaviour {
 	}
 
 	void setVisibility(bool vis) {
-		foreach (Renderer r in renderers) {
-			r.enabled = vis;
+		foreach (GameObject go in startScreenComponents) {
+			go.SetActive(vis);
 		}
 	}
 }
