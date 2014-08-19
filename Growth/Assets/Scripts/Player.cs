@@ -43,7 +43,7 @@ public class Player : MonoBehaviour {
 
 	/**
 	 * Showa take damage animation for this many frames;
-	 * */
+	 */
 	private int takeDamage = 0;
 	public int numFramesToDoDamageVibrateFor = 15;
 
@@ -279,7 +279,7 @@ public class Player : MonoBehaviour {
 		}
 
 		if (increaseScore) {
-			World.Instance.score.Increment(1);
+			World.Instance.score.Increment(this.polygon.vertices.Count());
 		}
 
 		this.pulseOut = true;
@@ -298,6 +298,9 @@ public class Player : MonoBehaviour {
 			CapturedNutrient n = this.nutrientList.Pop();
 			GameObject.Destroy(n.gameObject);
 		}
+
+		//Decrease the score. This will also reset the score multiplier.
+		World.Instance.score.Decrement(this.polygon.vertices.Count());
 
 		this.takeDamage = numFramesToDoDamageVibrateFor;
 	}
