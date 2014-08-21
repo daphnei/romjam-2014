@@ -13,7 +13,8 @@ public class Score : MonoBehaviour {
 
 
 	private const float SCALE_INC_VALUE = 0.01f;
-	private float targetMultiplierTextScale = 0.05f;
+	private const float baseMultiplerTextScale = 0.05f;
+	private float targetMultiplierTextScale = baseMultiplerTextScale;
 
 	// Use this for initialization
 	void Start () {
@@ -28,7 +29,7 @@ public class Score : MonoBehaviour {
 		targetPos.z = 0;
 		this.multiplierText.transform.position = targetPos;
 
-		this.multiplierText.transform.localScale = Vector2.one * this.targetMultiplierTextScale;
+		this.multiplierText.transform.localScale = Vector2.one * baseMultiplerTextScale;
 
 		//The points text remains a static size.
 		this.pointsText.fontSize = Mathf.Min(Screen.height, Screen.width)/20;
@@ -64,7 +65,7 @@ public class Score : MonoBehaviour {
 
 	public void Decrement(int amount)
 	{
-		//this.scoreMultiplier = 0;
+		this.scoreMultiplier = 0;
 		this.updateMultiplierText();
 
 		if (this.score > 0)
@@ -73,7 +74,7 @@ public class Score : MonoBehaviour {
 			this.pointsText.text = score.ToString();
 		}
 
-		//this.multiplierText.transform.localScale = Vector2.one * 0.05f;
+		this.multiplierText.transform.localScale = Vector2.one * baseMultiplerTextScale;
 
 	}
 
