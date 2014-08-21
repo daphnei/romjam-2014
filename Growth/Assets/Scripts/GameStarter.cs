@@ -14,6 +14,8 @@ public class GameStarter : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		//GUI.skin.textField.fontSize = Screen.width/20;
+
+		World.Instance.score.SetVisible(false);
 	}
 	
 	// Update is called once per frame
@@ -25,6 +27,7 @@ public class GameStarter : MonoBehaviour {
 		if (vis && Input.GetMouseButtonDown(0)) {
 			setVisibility(vis = false);
 			gen.timeline.RestartTimeline();
+			World.Instance.score.SetVisible(true);
 		}
 		else if (!vis && World.Instance.player.CurVerts() == 3 && elapsed > timetopause) {
 			Debug.Log("Done here");

@@ -98,4 +98,10 @@ public class Score : MonoBehaviour {
 	{
 		this.multiplierText.text = "Combo x" + this.scoreMultiplier.ToString();
 	}
+
+	public void SetVisible(bool visible)
+	{
+		this.pointsText.gameObject.SetActive(visible);
+		this.multiplierText.gameObject.SetActive(visible);
+	}
 }
