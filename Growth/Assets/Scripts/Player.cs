@@ -24,7 +24,6 @@ public class Player : MonoBehaviour {
 	public List<NutrientColor> SideColors;
 
 	public float rotationSpeed { get; set; }
-	public int numberOfCapturedNutrients { get; set; }
 
 	public Material bulletMaterial;
 
@@ -34,8 +33,7 @@ public class Player : MonoBehaviour {
 	float prevRealTime;
 	float spawnTimer = 0;
 
-	private GameObject nutrientParent;
-	private List<CapturedNutrient> nutrientList;
+	private List<NutrientColor> capturedNutrientList;
 	private int lastPlayerRotationDir = 1; //either 1 or -1
 
 	private bool canFire = true;
@@ -54,9 +52,7 @@ public class Player : MonoBehaviour {
 	void Awake() {
 		World.Instance.Register(this);
 
-		this.nutrientParent = new GameObject();
-		this.nutrientParent.transform.position = this.transform.position;
-		this.nutrientList = new List<CapturedNutrient>();
+		this.capturedNutrientList = new List<NutrientColor>();
 
 		this.polygon.NumberOfSidesChanged += this.CreateBulletRing;
 		this.polygon.NumberOfSidesTransitionStart += this.DeleteBullets;
@@ -145,7 +141,6 @@ public class Player : MonoBehaviour {
 		// Rotate in the opposite direction to how the player is rotating, becuase it looks cool.
 		if (this.rotationSpeed != 0)
 			this.lastPlayerRotationDir = (this.rotationSpeed > 0 ? -1 : 1);
-		this.nutrientParent.transform.Rotate(Vector3.forward * Time.deltaTime * 80 * this.lastPlayerRotationDir);
 
 		// Handle spawn timers.
 		/*this.spawnTimer -= Time.deltaTime;
@@ -235,40 +230,25 @@ public class Player : MonoBehaviour {
 	/**
 	 * Takes in the color of the captured nutrient.
 	 */
-	public void AddNutrient(NutrientColor color, bool increaseScore=true) {
+	public void AddNutrient(NutrientColor color, bool increaseScore=true, bool updateUI=true) {
 		int curNumVertices = this.polygon.vertices.Length;
 
 		//Add a nutrient if we're not at the max.
-		if (this.nutrientList.Count < curNumVertices) {
-			float angleOfNewNut = (360 / curNumVertices) * this.nutrientList.Count;
-			float angleOfNewNutInRadians = Mathf.Deg2Rad * angleOfNewNut;
+		if (this.capturedNutrientList.Count < curNumVertices) {
+			this.capturedNutrientList.Add (color);
 
-			float radius = 0.5f;
-			Vector2 targetPosition = new Vector2(
-				radius * Mathf.Cos(angleOfNewNutInRadians),
-				radius * Mathf.Sin(angleOfNewNutInRadians));
-
-			CapturedNutrient nut = GameObject.Instantiate(this.nutrientPrefab) as CapturedNutrient;
-			nut.transform.parent = nutrientParent.transform;
-			nut.transform.localPosition = targetPosition;
-			nut.transform.localRotation = Quaternion.AngleAxis(0, Vector3.forward);
-			nut.GetComponent<NutrientAnimator>().nutColor = color;
-
-			this.nutrientList.Add(nut);
-
-			this.particleSystem.startColor = color.ColorValue();
-			this.particleSystem.Emit(20);
+			if (updateUI)
+			{
+				updateGradientOnPolygonMesh();
+				
+				this.particleSystem.startColor = color.ColorValue();
+				this.particleSystem.Emit(20);
+			}
 		}
 
 		//Reached the max number of nutrients for this polygom. Time to grow an extra side!
 		else {
-
-			//First delete all the nutrients.
-			foreach (CapturedNutrient nut in this.nutrientList) {
-				GameObject.Destroy(nut.gameObject);
-			}
-
-			this.nutrientList.Clear();
+			this.capturedNutrientList.Clear();
 			PulseController.Instance.ChangeNumLayers(this.polygon.numsides + 1 - 3);
 			this.polygon.addNode();
 
@@ -286,28 +266,54 @@ public class Player : MonoBehaviour {
 	}
 
 	public void RemoveNutrient() {
-		if (this.nutrientList.Count == 0 && this.polygon.numsides > 3) {
+		if (this.capturedNutrientList.Count == 0 && this.polygon.numsides > 3) {
 			PulseController.Instance.ChangeNumLayers(this.polygon.numsides - 1 - 3);
 			this.polygon.removeNode();
 
 			for (int i = 0; i < this.polygon.numsides; i++) {
-				this.AddNutrient(EnemyGenerator.randomColor(), false);
+				this.AddNutrient(EnemyGenerator.randomColor(), false, false);
 			}
 
-		} else if (this.nutrientList.Count > 0) {
-			CapturedNutrient n = this.nutrientList.Pop();
-			GameObject.Destroy(n.gameObject);
+			this.updateGradientOnPolygonMesh();
+
+		} else if (this.capturedNutrientList.Count > 0) {
+			this.capturedNutrientList.Pop();
+			
+			this.takeDamage = numFramesToDoDamageVibrateFor;
+
+			this.updateGradientOnPolygonMesh();
 		}
 
 		//Decrease the score. This will also reset the score multiplier.
 		World.Instance.score.Decrement(this.polygon.vertices.Count());
-
-		this.takeDamage = numFramesToDoDamageVibrateFor;
 	}
 
 	public void ResetNutrients() {
-		while (this.nutrientList.Count > 0) {
+		while (this.capturedNutrientList.Count > 0) {
 			RemoveNutrient();
 		}
+	}
+
+	public void updateGradientOnPolygonMesh()
+	{
+		Mesh mesh = this.polygon.filter.mesh;
+
+		Color[]  colorsForMesh = new Color[mesh.uv.Length];
+
+		// Instead if vertex.y we use uv.x
+		for (int i = 0; i < mesh.uv.Length;i++)
+		{
+			colorsForMesh[i] = new Color(UnityEngine.Random.value, UnityEngine.Random.value, UnityEngine.Random.value);
+			if (i < this.capturedNutrientList.Count)
+			{
+				colorsForMesh[i] = Extensions.ColorValue(this.capturedNutrientList[i]);
+			}
+			else
+			{
+				colorsForMesh[i] = new Color(1, 1, 1, 1);
+			}
+		}
+		
+		mesh.colors = colorsForMesh;
 	}
 }

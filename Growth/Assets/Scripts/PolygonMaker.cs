@@ -66,12 +66,14 @@ public class PolygonMaker : MonoBehaviour {
 
 			//Debug.Log(verts[i]);
 		}
-		
+
 		m.vertices = verts;
 		m.triangles = tris;
 		m.uv = uv;
+		//m.uv = new Vector2[4] {new Vector2(-0.5f, -0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, -0.5f), new Vector2(-0.5f, 0.5f)};
 
 		m.RecalculateNormals();
+
 		return m;
 	}
 
@@ -124,6 +126,8 @@ public class PolygonMaker : MonoBehaviour {
 		
 		m.vertices = verts;
 		m.uv = uv;
+		//m.uv = new Vector2[4] {new Vector2(-0.5f, -0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, -0.5f), new Vector2(-0.5f, 0.5f)};
+		Debug.Log("Colors: " + m.colors.Length);
 	}
 
 	static Vector2 v2uv(Vector3 v) {
@@ -141,7 +145,11 @@ public class PolygonMaker : MonoBehaviour {
 				Vector3.forward) * new Vector3(verts[i].x, verts[i].y, 0));
 		}
 		m.uv = uv;
+		
 		this.filter.mesh = m;
+
+//		Mesh m = this.filter.mesh;
+//		m.uv = new Vector2[4] {new Vector2(-0.5f, -0.5f), new Vector2(0.5f, 0.5f), new Vector2(0.5f, -0.5f), new Vector2(-0.5f, 0.5f)};
 	}
 
 	// Update is called once per frame
@@ -179,6 +187,9 @@ public class PolygonMaker : MonoBehaviour {
 			else {
 				numsides = numsides - 1;
 			}
+
+			//A terrible hack.
+			World.Instance.player.updateGradientOnPolygonMesh();
 			//Debug.Log(numsides);
 		}
 
